@@ -3,11 +3,13 @@
 
 this is a fork not the original mirage repository!!! 
 
-#+title:Mirage
 
-Mirage is a literate, layer-based Emacs configuration framework designed to give you maximal maintainability, extensibility and performance. All in a way you can understand and control from the ground up.
 
-| [[./mirage/startscreen-light.png]] | [[./mirage/startscreen-dark.png]] |
+
+* what the gooals to change from origianl repository?
+
+i notice how slow the packages is downloading so:
+- make path from installation to editing files short as much as possible  
 
 *How to use Mirage*
 
