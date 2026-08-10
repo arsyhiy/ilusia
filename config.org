@@ -1,8 +1,5 @@
-#+STARTUP: overview
+#+STARTUP: content
 #+FILETAGS: :emacs:
-
-
-
 
 #+title:My Personal Emacs Configuration
 #+PROPERTY: header-args:emacs-lisp :results none :tangle ./init.el :mkdirp yes
@@ -189,24 +186,24 @@ References:
 #+begin_src emacs-lisp
 
 ;; default
-(set-face-attribute 'default nil        :font "Fira Code Retina" :height 93)
+;(set-face-attribute 'default nil        :font "Fira Code Retina" :height 93)
 
 ;; fixed pitch
-(set-face-attribute 'fixed-pitch nil    :font "Fira Code Retina" :height 93)
+;(set-face-attribute 'fixed-pitch nil    :font "Fira Code Retina" :height 93)
 
 ;; variable pitch
-(set-face-attribute 'variable-pitch nil :font "PT Sans"  :height 105 :weight 'regular)
+;(set-face-attribute 'variable-pitch nil :font "PT Sans"  :height 105 :weight 'regular)
 
 ;; italic
-(defface mirage/italic
-  '((t :font "Victor Mono" :height  86 :weight  bold :slant italic))
-  "Italic typeface")
+;(defface mirage/italic
+;  '((t :font "Victor Mono" :height  86 :weight  bold :slant italic))
+;  "Italic typeface")
 
 ;; titles
-(setq typeface-title "Latin Modern Roman")
+;(setq typeface-title "Latin Modern Roman")
 
 ;; headings
-(setq typeface-heading "Century Gothic")
+;(setq typeface-heading "Century Gothic")
 
 ;; mode line
 (set-face-attribute 'mode-line nil :height 85 :inherit 'fixed-pitch)
@@ -299,6 +296,8 @@ References:
 * Personal settings
 
 #+begin_src emacs-lisp
+
+(evil-mode t)
 
 ;; language
 (setq default-input-method 'spanish-prefix)

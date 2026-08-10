@@ -1,38 +1,49 @@
+
 (mirage-module 'ef-themes)
 
 (setq light-theme 'ef-deuteranopia-light)
 (setq dark-theme  'ef-tritanopia-dark)
 
+
+
 (mirage-layer 'modeline-moody)
 
+
+
 ;; default
-(set-face-attribute 'default nil        :font "Fira Code Retina" :height 93)
+;(set-face-attribute 'default nil        :font "Fira Code Retina" :height 93)
 
 ;; fixed pitch
-(set-face-attribute 'fixed-pitch nil    :font "Fira Code Retina" :height 93)
+;(set-face-attribute 'fixed-pitch nil    :font "Fira Code Retina" :height 93)
 
 ;; variable pitch
-(set-face-attribute 'variable-pitch nil :font "PT Sans"  :height 105 :weight 'regular)
+;(set-face-attribute 'variable-pitch nil :font "PT Sans"  :height 105 :weight 'regular)
 
 ;; italic
-(defface mirage/italic
-  '((t :font "Victor Mono" :height  86 :weight  bold :slant italic))
-  "Italic typeface")
+;(defface mirage/italic
+;  '((t :font "Victor Mono" :height  86 :weight  bold :slant italic))
+;  "Italic typeface")
 
 ;; titles
-(setq typeface-title "Latin Modern Roman")
+;(setq typeface-title "Latin Modern Roman")
 
 ;; headings
-(setq typeface-heading "Century Gothic")
+;(setq typeface-heading "Century Gothic")
 
 ;; mode line
 (set-face-attribute 'mode-line nil :height 85 :inherit 'fixed-pitch)
+
+
 
 (mirage-module 'counsel)
 (mirage-module 'helpful)
 (mirage-module 'which-key)
 
+
+
 (mirage-layer 'navigation)
+
+
 
 ;; text editing
 (mirage-layer 'editing)
@@ -43,21 +54,35 @@
 ;; auto-completions
 (mirage-layer 'completion-vertico)
 
+
+
 ;; session management
 (mirage-layer 'session)
 ;; project management
 (mirage-layer 'project-interaction)
 
+
+
 (mirage-layer 'file-management)
+
+
 
 (mirage-layer 'ide)
 
+
+
 (mirage-layer 'latex)
+
+
 
 (mirage-module 'bitacora)
 
 (mirage-layer 'org-agenda)
 (mirage-layer 'org-gtd)
+
+
+
+(evil-mode t)
 
 ;; language
 (setq default-input-method 'spanish-prefix)
@@ -136,3 +161,4 @@
         ;; After the last group, the agenda will display items that didn't
         ;; match any of these groups, with the default order position of 99
         ))
+

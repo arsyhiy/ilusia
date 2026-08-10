@@ -5,11 +5,11 @@
 (mirage-module 'tablist)
 
 ;; modules
-(mirage-module 'pdf-tools)
-(mirage-module 'pdf-view-restore)
+;;(mirage-module 'pdf-tools)
+;;(mirage-module 'pdf-view-restore)
 
 ;; extensions
-(mirage-extend 'pdf)
+;;(mirage-extend 'pdf)
 
 (provide 'mirage-layer-pdf)
 ;;; mirage-pdf.el ends here

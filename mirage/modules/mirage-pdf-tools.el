@@ -1,10 +1,10 @@
 ;; requirements
 (mirage-module 'tablist)
 
-(straight-use-package 'pdf-tools)
-(pdf-tools-install)
-(pdf-loader-install)
-(require 'pdf-tools)
+;;(straight-use-package 'pdf-tools)
+;;(pdf-tools-install)
+;;(pdf-loader-install)
+;;(require 'pdf-tools)
 
 ;; page switching
 (define-key pdf-view-mode-map (kbd "<up>")    #'pdf-view-previous-line-or-previous-page)
