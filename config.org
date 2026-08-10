@@ -4,35 +4,10 @@
 #+title:My Personal Emacs Configuration
 #+PROPERTY: header-args:emacs-lisp :results none :tangle ./init.el :mkdirp yes
 
-This is my personal literate Emacs configuration. With it I aim to get the most out of Emacs /there where it shines most/, which in my humble opinion is note-taking, writing and literate programming.
-
-*Objectives*
-
-I aim to make of Emacs my tool of choice to:
-
-- Jot down notes and write documents and prose
-   - [X] diary
-   - [X] scratchpad
-   - [X] zettelkasten
-
-- Write code and version control
-   - [X] Jupyter-style notebooks within Org Mode
-   - [X] Magit
-   - [ ] IDE
-
-- Manage the configuration of my machine
-   - [X] literate dotfiles
-
-- Manage email
-   - [ ] email client
-
-- Publish to the web and in document form
-   - [ ] blog
-   - [ ] LaTeX
-
 * Lockfile
+i decided to keep this, but notice that version of this packages are basically not new
 
-As explained by [[https://www.lucacambiaghi.com/vanilla-emacs/readme.html#3.2.straight_lockfile][Luca Ambiaghi]],
+# As explained by [[https://www.lucacambiaghi.com/vanilla-emacs/readme.html#3.2.straight_lockfile][Luca Ambiaghi]],
 
 #+begin_quote
 
@@ -185,6 +160,8 @@ References:
 
 #+begin_src emacs-lisp
 
+
+(set-face-attribute 'default nil :family "JetBrainsMono Nerd Font" :height 130)
 ;; default
 ;(set-face-attribute 'default nil        :font "Fira Code Retina" :height 93)
 
@@ -215,9 +192,9 @@ References:
 
 #+begin_src emacs-lisp
 
-(mirage-module 'counsel)
-(mirage-module 'helpful)
-(mirage-module 'which-key)
+;;(mirage-module 'counsel)
+;;(mirage-module 'helpful)
+;;(mirage-module 'which-key)
 
 #+end_src
 
@@ -225,7 +202,7 @@ References:
 
 #+begin_src emacs-lisp
 
-(mirage-layer 'navigation)
+;;(mirage-layer 'navigation)
 
 #+end_src
 
@@ -234,13 +211,13 @@ References:
 #+begin_src emacs-lisp
 
 ;; text editing
-(mirage-layer 'editing)
+;;(mirage-layer 'editing)
 ;; text search
-(mirage-layer 'search)
+;;(mirage-layer 'search)
 ;; snippets
-(mirage-module 'yasnippet)
+;(mirage-module 'yasnippet)
 ;; auto-completions
-(mirage-layer 'completion-vertico)
+;(mirage-layer 'completion-vertico)
 
 #+end_src
 
@@ -249,17 +226,16 @@ References:
 #+begin_src emacs-lisp
 
 ;; session management
-(mirage-layer 'session)
+;;(mirage-layer 'session)
 ;; project management
-(mirage-layer 'project-interaction)
+;;(mirage-layer 'project-interaction)
 
 #+end_src
 
 ** File management
 
 #+begin_src emacs-lisp
-
-(mirage-layer 'file-management)
+;;(mirage-layer 'file-management)
 
 #+end_src
 
@@ -269,7 +245,7 @@ References:
 
 #+begin_src emacs-lisp
 
-(mirage-layer 'ide)
+;;(mirage-layer 'ide)
 
 #+end_src
 
@@ -277,7 +253,7 @@ References:
 
 #+begin_src emacs-lisp
 
-(mirage-layer 'latex)
+;;(mirage-layer 'latex)
 
 #+end_src
 
@@ -285,10 +261,10 @@ References:
 
 #+begin_src emacs-lisp
 
-(mirage-module 'bitacora)
+;;(mirage-module 'bitacora)
 
-(mirage-layer 'org-agenda)
-(mirage-layer 'org-gtd)
+;;(mirage-layer 'org-agenda)
+;;(mirage-layer 'org-gtd)
 
 #+end_src
 
@@ -299,83 +275,83 @@ References:
 
 (evil-mode t)
 
-;; language
-(setq default-input-method 'spanish-prefix)
+;; ;; language
+;; (setq default-input-method 'spanish-prefix)
 
-;; custom link types
-(@mirage/org-dir-link "msc1" (concat home "studio/academic/education/TU Delft/MSc/Space Flight/SPF-1/"))
-(@mirage/org-dir-link "ta"(concat home "studio/academic/education/TU Delft/_assistantships/"))
+;; ;; custom link types
+;; (@mirage/org-dir-link "msc1" (concat home "studio/academic/education/TU Delft/MSc/Space Flight/SPF-1/"))
+;; (@mirage/org-dir-link "ta"(concat home "studio/academic/education/TU Delft/_assistantships/"))
 
-;; org-roam capture templates
-(setq org-roam-capture-templates
-      '(("m" "mathematics" plain "%?"
-         :target (file+head "mathematics/%<%Y%m%d%H%M%S>-${slug}.org"
-			           "#+STARTUP: subtree\n\n\n\n#+title:${title}\n\n\n")
-         :unnarrowed t)
-        ("c" "control" plain "%?"
-         :target (file+head "control/%<%Y%m%d%H%M%S>-${slug}.org"
-			           "#+STARTUP: subtree\n\n\n\n#+title:${title}\n\n\n")
-         :unnarrowed t)))
+;; ;; org-roam capture templates
+;; (setq org-roam-capture-templates
+;;       '(("m" "mathematics" plain "%?"
+;;          :target (file+head "mathematics/%<%Y%m%d%H%M%S>-${slug}.org"
+;; 			           "#+STARTUP: subtree\n\n\n\n#+title:${title}\n\n\n")
+;;          :unnarrowed t)
+;;         ("c" "control" plain "%?"
+;;          :target (file+head "control/%<%Y%m%d%H%M%S>-${slug}.org"
+;; 			           "#+STARTUP: subtree\n\n\n\n#+title:${title}\n\n\n")
+;;          :unnarrowed t)))
 
-;; org-agenda setup
-(setq org-agenda-hide-tags-regexp
-      "CW\\|INT\\|THESIS\\|TA\\|BIRTHDAY\\|PERSONAL\\|PROFESSIONAL\\|TRAVEL\\|PEOPLE\\|HOME\\|FINANCE\\|PURCHASES\\|GIFTS")
+;; ;; org-agenda setup
+;; (setq org-agenda-hide-tags-regexp
+;;       "CW\\|INT\\|THESIS\\|TA\\|BIRTHDAY\\|PERSONAL\\|PROFESSIONAL\\|TRAVEL\\|PEOPLE\\|HOME\\|FINANCE\\|PURCHASES\\|GIFTS")
 
-(setq org-super-agenda-groups
-      '(;; Each group has an implicit boolean OR operator between its selectors.
-        (:name "Important"
-               ;; Single arguments given alone
-               :priority "A")
-        (:name "Coursework"
-               ;; Single arguments given alone
-               :tag "CW")
-        (:name "Internship"
-               ;; Single arguments given alone
-               :tag "INT")
-        (:name "Thesis"
-               ;; Single arguments given alone
-               :tag "THESIS")
-        (:name "Assistantships"
-               ;; Single arguments given alone
-               :tag "TA")
-        (:name "Personal"
-               ;; Single arguments given alone
-               :tag "PERSONAL")
-        (:name "Professional"
-               ;; Single arguments given alone
-               :tag "PROFESSIONAL")
-        (:name "Travel"
-               ;; Single arguments given alone
-               :tag "TRAVEL")
-        (:name "Keeping in touch"
-               ;; Single arguments given alone
-               :tag "PEOPLE")
-        (:name "Home"
-               ;; Single arguments given alone
-               :tag "HOME")
-        (:name "Medical"
-               ;; Single arguments given alone
-               :tag "MEDICAL")
-        (:name "Finance"
-               ;; Single arguments given alone
-               :tag "FINANCE")
-        (:name "Purchases"
-               ;; Single arguments given alone
-               :tag "PURCHASES")
-        (:name "Gifts"
-               ;; Single arguments given alone
-               :tag "GIFTS")
-        (:name "Birthdays"
-               ;; Single arguments given alone
-               :tag "BIRTHDAY")
-        (:priority<= "B"
-                     ;; Show this section after "Today" and "Important", because
-                     ;; their order is unspecified, defaulting to 0. Sections
-                     ;; are displayed lowest-number-first.
-                     :order 1)
-        ;; After the last group, the agenda will display items that didn't
-        ;; match any of these groups, with the default order position of 99
-        ))
+;; (setq org-super-agenda-groups
+;;       '(;; Each group has an implicit boolean OR operator between its selectors.
+;;         (:name "Important"
+;;                ;; Single arguments given alone
+;;                :priority "A")
+;;         (:name "Coursework"
+;;                ;; Single arguments given alone
+;;                :tag "CW")
+;;         (:name "Internship"
+;;                ;; Single arguments given alone
+;;                :tag "INT")
+;;         (:name "Thesis"
+;;                ;; Single arguments given alone
+;;                :tag "THESIS")
+;;         (:name "Assistantships"
+;;                ;; Single arguments given alone
+;;                :tag "TA")
+;;         (:name "Personal"
+;;                ;; Single arguments given alone
+;;                :tag "PERSONAL")
+;;         (:name "Professional"
+;;                ;; Single arguments given alone
+;;                :tag "PROFESSIONAL")
+;;         (:name "Travel"
+;;                ;; Single arguments given alone
+;;                :tag "TRAVEL")
+;;         (:name "Keeping in touch"
+;;                ;; Single arguments given alone
+;;                :tag "PEOPLE")
+;;         (:name "Home"
+;;                ;; Single arguments given alone
+;;                :tag "HOME")
+;;         (:name "Medical"
+;;                ;; Single arguments given alone
+;;                :tag "MEDICAL")
+;;         (:name "Finance"
+;;                ;; Single arguments given alone
+;;                :tag "FINANCE")
+;;         (:name "Purchases"
+;;                ;; Single arguments given alone
+;;                :tag "PURCHASES")
+;;         (:name "Gifts"
+;;                ;; Single arguments given alone
+;;                :tag "GIFTS")
+;;         (:name "Birthdays"
+;;                ;; Single arguments given alone
+;;                :tag "BIRTHDAY")
+;;         (:priority<= "B"
+;;                      ;; Show this section after "Today" and "Important", because
+;;                      ;; their order is unspecified, defaulting to 0. Sections
+;;                      ;; are displayed lowest-number-first.
+;;                      :order 1)
+;;         ;; After the last group, the agenda will display items that didn't
+;;         ;; match any of these groups, with the default order position of 99
+;;         ))
 
 #+end_src
 
