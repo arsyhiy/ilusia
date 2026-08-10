@@ -1,6 +1,7 @@
 #+STARTUP: overview
 #+FILETAGS: :emacs:
 
+this is a fork not the original mirage repository!!! 
 
 #+title:Mirage
 
@@ -83,5 +84,7 @@ Components (layers mostly) marked with TODO in =mirage.org= have much room for i
 - The LaTeX layer
 
 Adding packages and setting up things is easy within layers! And I would love any help to make these better than they are. If you have a good setup and would like to contribute or give a suggestion you're more than welcome to! :)
+
+
 
 
