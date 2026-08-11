@@ -84,13 +84,5 @@
 (straight-use-package 'no-littering)
 (require 'no-littering)
 
-;;;; el-patch
-(straight-use-package 'el-patch)
-(require 'el-patch)
-
-(setq debug-on-error nil)
-
-(global-set-key (kbd "C-c SPC") #'whitespace-mode)
-
 (provide 'mirage-core-config-management)
 ;;; mirage-config-management.el ends here

@@ -85,12 +85,6 @@
 (customize-set-variable 'native-comp-speed 2)
 (customize-set-variable 'native-comp-deferred-compilation t)
 
-;;;; Set C Directory
-;; NOTE this assumes that the C source files are included with emacs.
-;; This depends on the build process used.
-;; For one example see https://github.com/mclear-tools/build-emacs-macos
-(setq find-function-C-source-directory "/Applications/Emacs.app/Contents/Resources/src")
-
 ;;;; Prefer Newer files
 ;; Prefer newer versions of files
 (setq load-prefer-newer t)
