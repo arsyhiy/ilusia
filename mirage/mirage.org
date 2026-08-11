@@ -383,3 +383,120 @@ From Lambda Emacs. All credit to Colin McLear.
 (global-set-key (kbd "C-x g") #'magit-status)
 
 #+end_src
+
+** Themes
+*** Themes
+**** Ef
+:PROPERTIES:
+:header-args:emacs-lisp+: :tangle ./modules/mirage-ef-themes.el
+:END:
+
+#+begin_src emacs-lisp
+
+(straight-use-package '(ef-themes :type git :host nil :repo "https://git.sr.ht/~protesilaos/ef-themes"))
+(require 'ef-themes)
+
+#+end_src
+** Mode line
+
+**** Doom
+:PROPERTIES:
+:header-args:emacs-lisp+: :tangle ./modules/mirage-doom-themes.el
+:END:
+
+#+begin_src emacs-lisp
+
+(straight-use-package 'doom-themes)
+(require 'doom-themes)
+
+#+end_src
+*** Doom
+:PROPERTIES:
+:header-args:emacs-lisp+: :tangle ./layers/mirage-modeline-doom.el
+:END:
+
+#+begin_src emacs-lisp
+
+  ;; modules
+  (mirage-module 'doom-modeline)
+  ;; extensions
+(mirage-extend 'theme-modeline)
+#+end_src
+
+
+
+
+*** Mode line
+:PROPERTIES:
+:header-args:emacs-lisp+: :tangle ./extensions/mirage-theme-modeline.el
+:END:
+
+#+begin_src emacs-lisp
+
+(defun mirage/modeline-set-colors (fg fg-in bg bg-in)
+  "Set the color of the mode and header lines and blend the 
+`doom-modeline-bar' with the background."
+  (set-face-attribute 'mode-line            nil :foreground fg    :background bg    :box nil)
+  (set-face-attribute 'mode-line-inactive   nil :foreground fg-in :background bg-in :box nil)
+  ;; header line
+  (set-face-attribute 'header-line          nil :foreground fg-in :background bg-in :box nil))
+
+(defvar mirage/dark-modeline-colors '("#cfcfcf" "#cfcfcf" "#454545" "#242424")
+  "Dark modeline HTML colors: FOREGROUND, FOREGROUND-INACTIVE, BACKGROUND, BACKGROUND-INACTIVE")
+
+(defvar mirage/light-modeline-colors '("#616161" "#878787" "#c4c4c4" "#ededed")
+  "Light modeline HTML colors: FOREGROUND, FOREGROUND-INACTIVE, BACKGROUND, BACKGROUND-INACTIVE")
+
+(defun mirage/set-dark-modeline-colors ()
+  (apply 'mirage/modeline-set-colors mirage/dark-modeline-colors))
+
+(defun mirage/set-light-modeline-colors ()
+  (apply 'mirage/modeline-set-colors mirage/light-modeline-colors))
+
+(add-to-list 'mirage/theme-advice-dark  #'mirage/set-dark-modeline-colors)
+(add-to-list 'mirage/theme-advice-light #'mirage/set-light-modeline-colors)
+
+;; reload active theme
+(let ((active-theme (car custom-enabled-themes)))
+  (if active-theme (enable-theme active-theme)))
+
+#+end_src
+
+*** Doom
+:PROPERTIES:
+:header-args:emacs-lisp+: :tangle ./modules/mirage-doom-modeline.el
+:END:
+
+#+begin_src emacs-lisp
+
+;; doom-modeline
+(straight-use-package 'doom-modeline)
+
+;; bar
+;;(setq-default doom-modeline-bar-width 0.01)
+  (setq-default doom-modeline-height 40)
+
+;; mode line initialization hook
+(add-hook 'after-init-hook #'doom-modeline-mode)
+
+#+end_src
+
+
+
+** Input
+*** Editing
+**** evil
+:PROPERTIES:
+:header-args:emacs-lisp+: :tangle ./modules/mirage-evil.el
+:END:
+
+#+begin_src emacs-lisp
+
+;; evil
+(straight-use-package 'evil)
+(require 'evil)
+
+;; bindings
+(global-set-key (kbd "C-<escape>") #'evil-mode)
+
+#+end_src
