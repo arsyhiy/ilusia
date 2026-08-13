@@ -18,5 +18,5 @@
 ;; fall back to straight.el
 (setq straight-use-package-by-default t)
 
-(provide 'mirage-core-package-manager)
-;;; mirage-package-manager.el ends here
+(provide 'ilusia-core-package-manager)
+;;; ilusia-core-package-manager.el ends here

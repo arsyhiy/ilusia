@@ -8,5 +8,5 @@
 ;; mode line initialization hook
 (add-hook 'after-init-hook #'doom-modeline-mode)
 
-(provide 'mirage-module-doom-modeline)
-;;; mirage-doom-modeline.el ends here
+(provide 'ilusia-module-doom-modeline)
+;;; ilusia-module-doom-modeline.el ends here

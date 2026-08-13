@@ -1,6 +1,8 @@
 #+STARTUP: overview
 #+FILETAGS: :emacs:
 
+NOTE: изучить этот файл
+
 
 
 #+title:Backlog
@@ -155,12 +157,12 @@ Functional needs, resources, action plans - dirty.
 - https://www.reddit.com/r/emacs/comments/hnf3cw/my_orgmode_agenda_much_better_now_with_category/
    - https://github.com/psamim/dotfiles/blob/master/doom/config.el#L73
 
-** mirage
+** ilusia
 *** lockfile
 
 - load
    - error
-      - (setq mirage-load-error t)
+      - (setq ilusia-load-error t)
    - if no load error
       - automatic straight package freeze
 - frozen lockfile -> config
@@ -1050,7 +1052,7 @@ Application backlog
 - alert
    - https://github.com/jwiegley/alert
 - notification
-   - https://www.gnu.org/software/emacs/manual/html_node/mirage/Desktop-Notifications.html
+   - https://www.gnu.org/software/emacs/manual/html_node/ilusia/Desktop-Notifications.html
 - org-mode
    - https://github.com/spegoraro/org-alert
 

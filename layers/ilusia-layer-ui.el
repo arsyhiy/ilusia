@@ -1,8 +1,8 @@
-;; utilities
+;; icons
+; (ilusia-module 'all-the-icons)
 
-;; magit
-
-(mirage-layer 'version-control)
+;; highlights
+;(ilusia-module 'rainbow-mode)
 
 ;; size
 (add-to-list 'default-frame-alist '(height . 50))
@@ -22,5 +22,17 @@
 ;; title
 (setq-default frame-title-format '("%b"))
 
-(provide 'mirage-core-base-config)
-;;; mirage-base-config.el ends here
+;; time
+;; (display-time-mode t)
+
+;; column numbers
+(column-number-mode)
+
+;; mode display
+;; (ilusia-module 'delight)
+
+;; extensions
+;;(ilusia-extend 'ui)
+
+(provide 'ilusia-layer-ui)
+;;; ilusia-layer-ui.el ends here

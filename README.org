@@ -1,7 +1,7 @@
 #+STARTUP: overview
 #+FILETAGS: :emacs:
 
-this is a fork not the original mirage repository!!! 
+this is a fork not the original ilusia repository!!! 
 
 
 
@@ -11,51 +11,51 @@ this is a fork not the original mirage repository!!!
 i notice how slow the packages is downloading so:
 - make path from installation to editing files short as much as possible  
 
-*How to use Mirage*
+*How to use ilusia*
 
 Clone this repository to your =.emacs.d=. Write your personal configuration in =config.org=; all =emacs-lisp= source code blocks will be tangled to =init.el= every time =config.org= is saved.
 
 *BOM*
 
 | *Package Manager* | *Literate Emacs config*             | *Keyboard bindings*       |
-| [[https://github.com/radian-software/straight.el][straight.el]]   | [[https://github.com/alopezrivera/mirage/blob/main/config.org][config.org]] (tangled to =init.el=) | Emacs + custom bindings |
+| [[https://github.com/radian-software/straight.el][straight.el]]   | [[https://github.com/alopezrivera/ilusia/blob/main/config.org][config.org]] (tangled to =init.el=) | Emacs + custom bindings |
 
 * Features out of the box
 
-The Mirage [[https://github.com/alopezrivera/mirage/blob/main/mirage/mirage.org#base-configuration][Base Configuration]] comes with batteries included!
+The ilusia [[https://github.com/alopezrivera/ilusia/blob/main/ilusia/ilusia.org#base-configuration][Base Configuration]] comes with batteries included!
 
-- [[https://github.com/alopezrivera/mirage/blob/main/mirage/mirage.org#ui][UI]]
+- [[https://github.com/alopezrivera/ilusia/blob/main/ilusia/ilusia.org#ui][UI]]
 
   Clean, minimalistic UI
-- [[https://github.com/alopezrivera/mirage/blob/main/mirage/mirage.org#themes][Themes]]
+- [[https://github.com/alopezrivera/ilusia/blob/main/ilusia/ilusia.org#themes][Themes]]
 
   Easily set light and dark themes, easy theme toggling and circadian theme switching between light and dark themes
-- [[https://github.com/alopezrivera/mirage/blob/main/mirage/mirage.org#dashboard][A good welcome]]
+- [[https://github.com/alopezrivera/ilusia/blob/main/ilusia/ilusia.org#dashboard][A good welcome]]
 
   Start screen with quick links to recent files, projects, bookmarks, registers and your weekly agenda
-- [[https://github.com/alopezrivera/mirage/blob/main/mirage/mirage.org#org-mode][Full fledged Org mode]]
+- [[https://github.com/alopezrivera/ilusia/blob/main/ilusia/ilusia.org#org-mode][Full fledged Org mode]]
 
   Ready for literate programming, daily planning with =org-agenda= + =org-super-agenda=, code notebooks for *any language*, your own zettelkasten with =org-roam= and more
-- [[https://github.com/alopezrivera/mirage/blob/main/mirage/mirage.org#pdf][Full fledged PDF support]]
+- [[https://github.com/alopezrivera/ilusia/blob/main/ilusia/ilusia.org#pdf][Full fledged PDF support]]
 
   Annotations and highlights you can save directly to the PDF, light and dark mode, text seach and more
-- [[https://github.com/alopezrivera/mirage/blob/main/mirage/mirage.org#version-control][Magit for version control]]
+- [[https://github.com/alopezrivera/ilusia/blob/main/ilusia/ilusia.org#version-control][Magit for version control]]
 
   A highlight of Emacs: version-control with the best Git front-end of them all
 
-* The Mirage Core
+* The ilusia Core
 
-The backbone of Mirage, the [[https://github.com/alopezrivera/mirage/blob/main/mirage/mirage.org#mirage-core-1][Mirage Core]], consists of the elisp code responsible for the
+The backbone of ilusia, the [[https://github.com/alopezrivera/ilusia/blob/main/ilusia/ilusia.org#ilusia-core-1][ilusia Core]], consists of the elisp code responsible for the
 
 - Package manager, currently =straight.el=
 - Config management
-- Mirage [[https://github.com/alopezrivera/mirage/blob/main/mirage/mirage.org#base-configuration][Base Configuration]]
+- ilusia [[https://github.com/alopezrivera/ilusia/blob/main/ilusia/ilusia.org#base-configuration][Base Configuration]]
 
-* Mirage components: Layers, Modules and Extensions
+* ilusia components: Layers, Modules and Extensions
 
 Emacs has an expansive package landscape, providing it with wide-ranging functionality. Many packages are complementary, and their configuration non-trivial.
 
-Following the approach of [[https://github.com/doomemacs/doomemacs][Doom Emacs]] and [[https://www.spacemacs.org][SpaceMacs]], in Mirage, we combine complementary packages into units called "layers", each providing a certain set of functionality, for example: [[https://github.com/alopezrivera/mirage/blob/main/mirage.org#pdf-1][PDF handling]], [[https://github.com/alopezrivera/mirage/blob/main/mirage.org#latex-1][LaTeX editing]] and an [[https://github.com/alopezrivera/mirage/blob/main/mirage.org#ide-1][Integrated Development Environment]].
+Following the approach of [[https://github.com/doomemacs/doomemacs][Doom Emacs]] and [[https://www.spacemacs.org][SpaceMacs]], in ilusia, we combine complementary packages into units called "layers", each providing a certain set of functionality, for example: [[https://github.com/alopezrivera/ilusia/blob/main/ilusia.org#pdf-1][PDF handling]], [[https://github.com/alopezrivera/ilusia/blob/main/ilusia.org#latex-1][LaTeX editing]] and an [[https://github.com/alopezrivera/ilusia/blob/main/ilusia.org#ide-1][Integrated Development Environment]].
 
 Layers are composed of:
 
@@ -67,19 +67,19 @@ Layers are composed of:
 #+begin_src emacs-lisp
 
 ;; Loading a layer
-(mirage-layer 'org)
+(ilusia-layer 'org)
 
 ;; Loading a module
-(mirage-module 'org-roam)
+(ilusia-module 'org-roam)
 
 ;; Loading an extension
-(mirage-extend 'org-queries)
+(ilusia-extend 'org-queries)
 
 #+end_src
 
 * Contributing
 
-Components (layers mostly) marked with TODO in =mirage.org= have much room for improvement. For example:
+Components (layers mostly) marked with TODO in =ilusia.org= have much room for improvement. For example:
 
 - The Project interaction layer
 - The IDE layer
