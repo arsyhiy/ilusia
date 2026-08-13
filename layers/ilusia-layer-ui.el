@@ -4,6 +4,12 @@
 ;; highlights
 ;(ilusia-module 'rainbow-mode)
 
+;; ;; centering
+;; (mirage-module 'olivetti)
+
+;; ;; line numbers
+;; (global-set-key (kbd "C-c l") #'display-line-numbers-mode)
+
 ;; size
 (add-to-list 'default-frame-alist '(height . 50))
 (add-to-list 'default-frame-alist '(width  . 70))
@@ -21,6 +27,18 @@
 
 ;; title
 (setq-default frame-title-format '("%b"))
+
+;; ;; fringes
+;; (set-fringe-mode nil)
+
+;; ;; balance
+;; (global-set-key (kbd "C-x -") #'balance-windows)
+
+;; ;; split threshold
+;; (setq split-width-threshold 70)
+
+;; ;; visible bell
+;; (setq visible-bell t)
 
 ;; time
 ;; (display-time-mode t)

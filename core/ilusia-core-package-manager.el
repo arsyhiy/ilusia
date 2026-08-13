@@ -1,4 +1,3 @@
-;;;; straight.el
 (defvar bootstrap-version)
 (let ((bootstrap-file
        (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
@@ -12,10 +11,8 @@
       (eval-print-last-sexp)))
   (load bootstrap-file nil 'nomessage))
 
-;;;; use-package
 (straight-use-package 'use-package)
 
-;; fall back to straight.el
 (setq straight-use-package-by-default t)
 
 (provide 'ilusia-core-package-manager)

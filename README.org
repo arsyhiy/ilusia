@@ -1,7 +1,7 @@
 #+STARTUP: overview
 #+FILETAGS: :emacs:
 
-this is a fork not the original ilusia repository!!! 
+this is a fork not the original mirage repository!!! 
 
 
 

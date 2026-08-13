@@ -6,7 +6,6 @@
 #+title:ilusia
 #+PROPERTY: header-args:emacs-lisp :results none :mkdirp yes
 
-#+end_src
 * ilusia Core
 ** Package manager
 :PROPERTIES:
@@ -14,7 +13,6 @@
 :END:
 #+begin_src emacs-lisp
 
-;;;; straight.el
 (defvar bootstrap-version)
 (let ((bootstrap-file
        (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
@@ -28,10 +26,8 @@
       (eval-print-last-sexp)))
   (load bootstrap-file nil 'nomessage))
 
-;;;; use-package
 (straight-use-package 'use-package)
 
-;; fall back to straight.el
 (setq straight-use-package-by-default t)
 
 #+end_src
@@ -42,14 +38,6 @@
 *** Component loading
 #+begin_src emacs-lisp
 
-;(defun ilusia-load-component (type component)
-;  "Load a ilusia COMPONENT of the given TYPE"
-;  (let ((component-name (symbol-name component)))
-;    (condition-case err
-;        (require (intern (concat "ilusia-" type "-" component-name)) (concat user-emacs-directory "ilusia/" type "s" "/ilusia-" component-name ".el"))
-;      (error (progn (message "ERROR: ilusia-%s %s load failed" component-name type)
-;		    (if debug-on-error
-;		        (debug err)))))))
 (defun ilusia-load-component (type component)
   "Load Ilusia COMPONENT of TYPE."
   (require
@@ -58,25 +46,14 @@
             type
             (symbol-name component)))))
 
-;; ilusia modules
-;;(defun ilusia-module (module)
-;;  "Load a ilusia MODULE by name"
-;;  (ilusia-load-component "module" module))
 (defun ilusia-module (module)
   "Load an Ilusia MODULE by name."
   (ilusia-load-component "module" module))
 
-;; ilusia layers
-;(defun ilusia-layer (layer)
-;  "Load a ilusia LAYER by name"
-;  (ilusia-load-component "layer" layer))
 (defun ilusia-layer (layer)
   "Load an Ilusia LAYER by name."
   (ilusia-load-component "layer" layer))
-;; ilusia extensions
-;(defun ilusia-extend (extension)
-;  "Load a ilusia EXTENSION by name"
-;  (ilusia-load-component "extension" extension))
+
 (defun ilusia-extend (extension)
   "Load an Ilusia EXTENSION by name."
   (ilusia-load-component "extension" extension))
@@ -85,71 +62,8 @@
 *** Async tangling
 #+begin_src emacs-lisp
 
-;; ;;;; Load async package
-;; (straight-use-package 'async)
-;; (require 'async)
-
-;; ;;;; Tangling machinery
-;; (defun ilusia/tangle (org-file &optional quiet)
-;;   "Asynchronously tangle an org file."
-;;   ;; Record initial time, name of current buffer and set async quiet switch
-;;   (let ((init-tangle-start-time (current-time))
-;; 	(file (buffer-file-name))
-;; 	(async-quiet-switch "-q"))
-;;     ;;; Async start
-;;     (async-start
-;;      ;;; Tangling function
-;;      `(lambda ()
-;;         ;; Delete all pre-existing ilusia components
-;;         (dolist (comp-dir (mapcar (lambda (dir) (concat ,user-emacs-directory "ilusia/" dir)) '("core" "layers" "modules" "extensions")))
-;;           (dolist (file (directory-files comp-dir t directory-files-no-dot-files-regexp))
-;;             (delete-file file)))
-;;         ;; Require org-mode
-;; 	(require 'org)
-;;         ;; Create a new org-mode tangling hook
-;; 	(add-hook 'org-babel-post-tangle-hook
-;; 		  (lambda ()
-;;                     ;; Obtain component and component type from the name of the source file being tangled to
-;;                     (if (string-match "\\(^.*/ilusia/\\)\\(.*\\)\\(/ilusia-\\)\\(.*\\)\\(.el\\)" (buffer-file-name))
-;; 		        (let ((component (match-string 4 (buffer-file-name)))
-;; 			      (comp-type (match-string 2 (buffer-file-name))))
-;; 		          (end-of-buffer)
-;; 		          (insert (concat
-;; 			           "\n"
-;; 			           "(provide 'ilusia-" (if (string-match-p "^.*s" comp-type)
-;;                                                            (substring comp-type 0 -1)
-;;                                                          comp-type)
-;;                                    "-" component ")\n"
-;; 			           ";;; ilusia-" component ".el ends here"))
-;; 		          (save-buffer)))))
-;;         ;; Tangle current file
-;; 	(org-babel-tangle-file ,org-file))
-;;      ;;; Report success and tangling time (or failure)
-;;      (unless quiet
-;;        `(lambda (result)
-;; 	  (if result
-;; 	      (message "|ilusia| ilusia components successfully tangled (%.2fs)."
-;; 		       (float-time (time-subtract (current-time) ',init-tangle-start-time)))
-;; 	    (message "|ilusia| ilusia component tangling failed.")))))))
-
-;; (defun ilusia/tangle-auto ()
-;;   "Automatically tangle Org Mode files in the Emacs config directory"
-;;   (let* ((file   (expand-file-name buffer-file-name))
-;; 	 (config (string-match (concat user-emacs-directory "config.org$") file))
-;; 	 (ilusia (string-match (concat user-emacs-directory "ilusia/ilusia.org$") buffer-file-name))
-;; 	 (org-confirm-babel-evaluate nil))
-;;     (if ilusia (ilusia/tangle file))
-;;     (if config (org-babel-tangle))))
-
-;; (add-hook 'after-save-hook #'ilusia/tangle-auto)
-
-
-;;;; Async tangling
-
 (straight-use-package 'async)
 (require 'async)
-
-
 
 (defun ilusia/tangle-add-provide ()
   "Add `provide' forms to generated Ilusia components."
@@ -177,20 +91,22 @@
 
             (write-region nil nil file nil 'silent)))))))
 
-
-
-
 (defun ilusia/tangle (&optional quiet)
-  "Tangle ilusia.org."
+  "Tangle Ilusia components and user config."
   (interactive)
 
-  (let ((org-file (expand-file-name "ilusia.org"
-                                    ilusia-directory))
+  (let ((ilusia-org
+         (expand-file-name "ilusia.org"
+                           ilusia-directory))
+        (config-org
+         (expand-file-name "config.org"
+                           user-emacs-directory))
         (start-time (current-time)))
 
-    ;; Remove generated components.
+    ;; Remove generated Ilusia components.
     (dolist (dir '("core" "layers" "modules" "extensions"))
-      (let ((directory (expand-file-name dir ilusia-directory)))
+      (let ((directory
+             (expand-file-name dir ilusia-directory)))
         (when (file-directory-p directory)
           (dolist (file
                    (directory-files
@@ -200,12 +116,15 @@
             (when (file-regular-p file)
               (delete-file file))))))
 
-    ;; Tangle.
+    ;; Tangle Ilusia.
     (let ((org-confirm-babel-evaluate nil))
-      (org-babel-tangle-file org-file))
+      (org-babel-tangle-file ilusia-org)
 
-    ;; Add provide forms.
-    (ilusia/tangle-add-provide)
+      ;; Add `provide' to generated Ilusia components.
+      (ilusia/tangle-add-provide)
+
+      ;; Tangle user config.
+      (org-babel-tangle-file config-org))
 
     (unless quiet
       (message
@@ -216,26 +135,34 @@
          start-time))))))
 
 (defun ilusia/tangle-auto ()
-  "Automatically tangle ilusia.org after saving."
-  (when (and buffer-file-name
-             (string-equal
-              (file-truename buffer-file-name)
-              (file-truename
-               (expand-file-name "ilusia.org"
-                                 ilusia-directory))))
-    (message "|ilusia| Auto-tangle triggered.")
-    (ilusia/tangle)))
+  "Automatically tangle configuration after saving."
+  (when buffer-file-name
+    (let ((file (file-truename buffer-file-name))
+          (ilusia-org
+           (file-truename
+            (expand-file-name "ilusia.org"
+                              ilusia-directory)))
+          (config-org
+           (file-truename
+            (expand-file-name "config.org"
+                              user-emacs-directory))))
+
+      (when (or (string-equal file ilusia-org)
+                (string-equal file config-org))
+        (message "|ilusia| Auto-tangle triggered.")
+        (ilusia/tangle)))))
 
 (add-hook 'after-save-hook #'ilusia/tangle-auto)
+
 #+end_src
 *** No littering
 #+begin_src emacs-lisp
 
-;; no-littering
 (straight-use-package 'no-littering)
 (require 'no-littering)
 
 #+end_src
+
 * Layers
 this section is for describing layers in undersections
 ** UI
@@ -266,6 +193,17 @@ this section is for describing layers in undersections
 
 #+end_src
 
+**** Buffer
+
+#+begin_src emacs-lisp
+
+;; ;; centering
+;; (mirage-module 'olivetti)
+
+;; ;; line numbers
+;; (global-set-key (kbd "C-c l") #'display-line-numbers-mode)
+
+#+end_src
 **** Frame
 все что относится к frame или точнее где через что вы взаимодействуюте с буффером
 #+begin_src emacs-lisp
@@ -290,6 +228,28 @@ this section is for describing layers in undersections
 
 #+end_src
 
+**** Window
+
+#+begin_src emacs-lisp
+
+;; ;; fringes
+;; (set-fringe-mode nil)
+
+;; ;; balance
+;; (global-set-key (kbd "C-x -") #'balance-windows)
+
+;; ;; split threshold
+;; (setq split-width-threshold 70)
+
+#+end_src
+**** Warnings
+
+#+begin_src emacs-lisp
+
+;; ;; visible bell
+;; (setq visible-bell t)
+
+#+end_src
 **** Mode line
 
 #+begin_src emacs-lisp
@@ -354,7 +314,6 @@ this section is for describing layers in undersections
 
 #+end_src
 
-
 ** development
 все что нужно или относится для разработки
 *** Version control
@@ -368,11 +327,23 @@ this section is for describing layers in undersections
 
 #+end_src
 
+*** IDE
+:PROPERTIES:
+:header-args:emacs-lisp+: :tangle ./layers/ilusia-layer-ide.el
+:END:
+
+#+begin_src emacs-lisp
+
+;; пока пустой!!!
+
+#+end_src
+
 ** Input
 :PROPERTIES:
 :header-args:emacs-lisp+: :tangle ./layers/ilusia-layer-input.el
 :END:
 
+ все что влеят на вввод 
 #+begin_src emacs-lisp
 
 ;; confirmation
@@ -386,6 +357,15 @@ this section is for describing layers in undersections
 
 #+end_src
 
+** Editing
+:PROPERTIES:
+:header-args:emacs-lisp+: :tangle ./layers/ilusia-layer-Editing.el
+:END:
+
+ все что влеят на editing
+#+begin_src emacs-lisp
+;; пока что пусто
+#+end_src
 ** Navigation
 :PROPERTIES:
 :header-args:emacs-lisp+: :tangle ./layers/ilusia-layer-navigation.el
@@ -448,21 +428,43 @@ this section is for describing layers in undersections
 
 #+end_src
 
-** IDE
-:PROPERTIES:
-:header-args:emacs-lisp+: :tangle ./layers/ilusia-layer-ide.el
-:END:
-
-#+begin_src emacs-lisp
-
-;; пока пустой!!!
-
-#+end_src
 
 * Modules
 this section is for discribing modules
 
-** evil
+** development
+*** magit
+:PROPERTIES:
+:header-args:emacs-lisp+: :tangle ./modules/ilusia-module-magit.el
+:END:
+
+#+begin_src emacs-lisp
+
+(straight-use-package 'magit)
+;; (require 'magit)
+
+(global-set-key (kbd "C-x g") #'magit-status)
+
+#+end_src
+*** smerge
+
+:PROPERTIES:
+:header-args:emacs-lisp+: :tangle ./modules/ilusia-module-smerge.el
+:END:
+
+#+begin_src emacs-lisp
+(use-package smerge-mode
+  :ensure nil
+  :defer t
+  :bind (:map smerge-mode-map
+          ("C-c ^ u" . smerge-keep-upper)
+          ("C-c ^ l" . smerge-keep-lower)
+          ("C-c ^ n" . smerge-next)
+          ("C-c ^ p" . smerge-previous)))
+#+end_src
+
+** input
+*** evil
 :PROPERTIES:
 :header-args:emacs-lisp+: :tangle ./modules/ilusia-module-evil.el
 :END:
@@ -470,14 +472,83 @@ this section is for discribing modules
 #+begin_src emacs-lisp
 
 ;; evil
-(straight-use-package 'evil)
+(use-package evil
+  :ensure t
+  :config
+  (evil-mode 1))
 ;; (require 'evil)
 ;; bindings
-(global-set-key (kbd "C-<escape>") #'evil-mode)
+;; (global-set-key (kbd "C-<escape>") #'evil-mode)
 
 #+end_src
 
-** emacs-dashboard
+*** which-key
+:PROPERTIES:
+:header-args:emacs-lisp+: :tangle ./modules/ilusia-module-which-key.el
+:END:
+
+#+begin_src emacs-lisp
+
+;; doom-modeline
+(use-package which-key
+  :hook
+  (after-init . which-key-mode))
+
+#+end_src
+
+*** undo-tree
+:PROPERTIES:
+:header-args:emacs-lisp+: :tangle ./modules/ilusia-module-undo-tree.el
+:END:
+
+#+begin_src emacs-lisp
+
+(use-package undo-tree
+  :hook (prog-mode . undo-tree-mode))
+;; (require 'undo-tree)
+
+#+end_src
+
+*** yasnippet
+
+:PROPERTIES:
+:header-args:emacs-lisp+: :tangle ./modules/ilusia-module-yasnippet.el
+:END:
+
+#+begin_src emacs-lisp
+
+(use-package yasnippet
+  :ensure t
+  :config
+  (yas-global-mode 1))
+
+#+end_src
+
+*** god-mode
+:PROPERTIES:
+:header-args:emacs-lisp+: :tangle ./modules/ilusia-module-god-mode.el
+:END:
+
+#+begin_src emacs-lisp
+
+(straight-use-package 'god-mode)
+(require 'god-mode)
+
+;; god
+(global-set-key (kbd "<escape>") #'god-mode-all)
+
+;; local
+(define-key god-local-mode-map (kbd "i") #'god-local-mode)
+
+;; bindings
+(define-key god-local-mode-map (kbd ".") #'repeat)
+(define-key god-local-mode-map (kbd "]") #'forward-paragraph)
+(define-key god-local-mode-map (kbd "[") #'backward-paragraph)
+
+#+end_src
+
+** ui
+*** emacs-dashboard
 :PROPERTIES:
 :header-args:emacs-lisp+: :tangle ./modules/ilusia-module-emacs-dashboard.el
 :END:
@@ -500,7 +571,170 @@ this section is for discribing modules
 ;;; ilusia-emacs-dashboard.el ends here
 
 #+end_src
-** projectile
+*** Themes
+:PROPERTIES:
+:header-args:emacs-lisp+: :tangle ./modules/ilusia-module-ef-themes.el
+:END:
+
+TODO:  перписать в том ввиде котором мне понравится 
+в оригинале препологается что themes это отдельный раздел как и UI решил обьеденить
+#+begin_src emacs-lisp
+
+(straight-use-package '(ef-themes :type git :host nil :repo "https://git.sr.ht/~protesilaos/ef-themes"))
+;; (require 'ef-themes)
+
+#+end_src
+
+*** Mode line
+
+*** Doom-theme
+:PROPERTIES:
+:header-args:emacs-lisp+: :tangle ./modules/ilusia-module-doom-themes.el
+:END:
+
+#+begin_src emacs-lisp
+
+(straight-use-package 'doom-themes)
+;; (require 'doom-themes)
+
+#+end_src
+
+*** Doom
+:PROPERTIES:
+:header-args:emacs-lisp+: :tangle ./modules/ilusia-module-doom-modeline.el
+:END:
+
+#+begin_src emacs-lisp
+
+;; doom-modeline
+(straight-use-package 'doom-modeline)
+
+;; bar
+;;(setq-default doom-modeline-bar-width 0.01)
+  (setq-default doom-modeline-height 40)
+
+;; mode line initialization hook
+(add-hook 'after-init-hook #'doom-modeline-mode)
+
+#+end_src
+
+*** diff-hl
+
+:PROPERTIES:
+:header-args:emacs-lisp+: :tangle ./modules/ilusia-module-diff-hl.el
+:END:
+
+#+begin_src emacs-lisp
+(use-package diff-hl
+  :defer t
+  :ensure t
+  :hook
+  (find-file . (lambda ()
+                 (global-diff-hl-mode)
+                 (diff-hl-flydiff-mode)
+                 (diff-hl-margin-mode)))
+  :custom
+  (diff-hl-side 'left)
+  (diff-hl-margin-symbols-alist '((insert . "┃")
+                                   (delete . "-")
+                                   (change . "┃")
+                                   (unknown . "┆")
+                                   (ignored . "i"))))
+#+end_src
+
+*** hl-todo
+
+:PROPERTIES:
+:header-args:emacs-lisp+: :tangle ./modules/ilusia-module-hl-todo.el
+:END:
+
+#+begin_src emacs-lisp
+(use-package hl-todo
+  :config
+  (global-hl-todo-mode 1))
+#+end_src
+*** highlight-indent-guides
+
+:PROPERTIES:
+:header-args:emacs-lisp+: :tangle ./modules/ilusia-module-highlight-indent-guides.el
+:END:
+
+#+begin_src emacs-lisp
+(use-package highlight-indent-guides
+  :hook (prog-mode . highlight-indent-guides-mode)
+  :custom
+  (highlight-indent-guides-method 'character))
+#+end_src
+
+*** rainbow-delimiters
+
+:PROPERTIES:
+:header-args:emacs-lisp+: :tangle ./modules/ilusia-module-highlight-rainbow-delimiters.el
+:END:
+
+#+begin_src emacs-lisp
+(use-package rainbow-delimiters
+  :ensure t
+
+  :hook
+  (prog-mode . rainbow-delimiters-mode)
+
+  :custom
+  (rainbow-delimiters-max-face-count 9))
+#+end_src
+
+*** treesit-auto
+
+:PROPERTIES:
+:header-args:emacs-lisp+: :tangle ./modules/ilusia-module-highlight-treesit-auto.el
+:END:
+
+#+begin_src emacs-lisp
+(use-package treesit-auto
+  :ensure t
+  :custom
+  (treesit-auto-install t)
+  :config
+  (treesit-auto-add-to-auto-mode-alist 'all)
+  (global-treesit-auto-mode t))
+
+;; временный хак в будущем удалить его
+;; честно тут я чуть не бросил emacs настолько это меня вымараживает
+(setq treesit-language-source-alist
+  '((c   "https://github.com/tree-sitter/tree-sitter-c" "v0.23.2")
+     (cpp "https://github.com/tree-sitter/tree-sitter-cpp" "v0.23.2")
+     (css "https://github.com/tree-sitter/tree-sitter-css" "v0.23.2")
+     (html "https://github.com/tree-sitter/tree-sitter-html" "v0.23.2")
+     (javascript "https://github.com/tree-sitter/tree-sitter-javascript" "v0.20.2")))
+#+end_src
+
+*** all-the-icons
+
+:PROPERTIES:
+:header-args:emacs-lisp+: :tangle ./modules/ilusia-module-all-the-icons.el
+:END:
+
+
+#+begin_src emacs-lisp
+
+;; Symbol library
+(straight-use-package 'all-the-icons)
+
+#+end_src
+
+Now that ~all-the-icons~ is installed, all the icon typefaces must be actually present in
+the local machine:
+
+#+begin_src emacs-lisp :tangle no
+
+(all-the-icons-install-fonts)
+
+#+end_src
+
+
+
+** library
+*** projectile
 :PROPERTIES:
 :header-args:emacs-lisp+: :tangle ./modules/ilusia-module-projectile.el
 :END:
@@ -518,20 +752,8 @@ this section is for discribing modules
 
 #+end_src
 
-** magit
-:PROPERTIES:
-:header-args:emacs-lisp+: :tangle ./modules/ilusia-module-magit.el
-:END:
-
-#+begin_src emacs-lisp
-
-(straight-use-package 'magit)
-;; (require 'magit)
-
-(global-set-key (kbd "C-x g") #'magit-status)
-
-#+end_src
-** consult
+** navigation
+*** consult
 :PROPERTIES:
 :header-args:emacs-lisp+: :tangle ./modules/ilusia-module-consult.el
 :END:
@@ -543,7 +765,7 @@ this section is for discribing modules
 
 #+end_src
 
-** marginalia
+*** marginalia
 :PROPERTIES:
 :header-args:emacs-lisp+: :tangle ./modules/ilusia-module-marginalia.el
 :END:
@@ -555,30 +777,7 @@ this section is for discribing modules
 (marginalia-mode)
 
 #+end_src
-** orderless
-:PROPERTIES:
-:header-args:emacs-lisp+: :tangle ./modules/ilusia-module-orderless.el
-:END:
-
-#+begin_src emacs-lisp
-
-(straight-use-package 'orderless)
-;; (require 'orderless)
-
-#+end_src
-** undo-tree
-:PROPERTIES:
-:header-args:emacs-lisp+: :tangle ./modules/ilusia-module-undo-tree.el
-:END:
-
-#+begin_src emacs-lisp
-
-(use-package undo-tree
-  :hook (prog-mode . undo-tree-mode))
-;; (require 'undo-tree)
-
-#+end_src
-** vertico 
+*** vertico 
 :PROPERTIES:
 :header-args:emacs-lisp+: :tangle ./modules/ilusia-module-vertico.el
 :END:
@@ -607,7 +806,7 @@ this section is for discribing modules
 (setq enable-recursive-minibuffers t)
 
 #+end_src
-** helm
+*** helm
 :PROPERTIES:
 :header-args:emacs-lisp+: :tangle ./modules/ilusia-module-helm.el
 :END:
@@ -622,82 +821,60 @@ this section is for discribing modules
 
 #+end_src
 
-*** Themes
+
+*** dired
+
 :PROPERTIES:
-:header-args:emacs-lisp+: :tangle ./modules/ilusia-module-ef-themes.el
-:END:
-
-TODO:  перписать в том ввиде котором мне понравится 
-в оригинале препологается что themes это отдельный раздел как и UI решил обьеденить
-#+begin_src emacs-lisp
-
-(straight-use-package '(ef-themes :type git :host nil :repo "https://git.sr.ht/~protesilaos/ef-themes"))
-;; (require 'ef-themes)
-
-#+end_src
-
-*** Mode line
-
-*** Doom
-:PROPERTIES:
-:header-args:emacs-lisp+: :tangle ./modules/ilusia-module-doom-themes.el
+:header-args:emacs-lisp+: :tangle ./modules/ilusia-module-dired.el
 :END:
 
 #+begin_src emacs-lisp
 
-(straight-use-package 'doom-themes)
-;; (require 'doom-themes)
+(with-eval-after-load 'dired
+  (setq dired-dwim-target t
+    dired-kill-when-opening-new-dired-buffer t)
+
+  (setq dired-listing-switches
+    (if (eq system-type 'gnu/linux)
+      "-lah --group-directories-first"
+      "-lah"))
+
+  (setq dired-guess-shell-alist-user
+    '(("\\.\\(png\\|jpe?g\\|tiff\\)"
+        (cond
+          ((executable-find "feh") "feh")
+          ((executable-find "xdg-open") "xdg-open")
+          (t "open")))
+       ("\\.\\(mp[34]\\|m4a\\|ogg\\|flac\\|webm\\|mkv\\)"
+         (cond
+           ((executable-find "mpv") "mpv")
+           ((executable-find "xdg-open") "xdg-open")
+           (t "open")))
+       (".*"
+         (or (and (executable-find "xdg-open") "xdg-open")
+           "open")))))
+
+(with-eval-after-load 'dired
+  (require 'dired-x)
+
+  ;; NOTE: hide all .meta file. thats for c#
+  (setq dired-omit-files "\\.meta$")
+
+  (add-hook 'dired-mode-hook #'dired-omit-mode))
 
 #+end_src
 
-** Doom
+** orderless
 :PROPERTIES:
-:header-args:emacs-lisp+: :tangle ./modules/ilusia-module-doom-modeline.el
+:header-args:emacs-lisp+: :tangle ./modules/ilusia-module-orderless.el
 :END:
 
 #+begin_src emacs-lisp
 
-;; doom-modeline
-(straight-use-package 'doom-modeline)
-
-;; bar
-;;(setq-default doom-modeline-bar-width 0.01)
-  (setq-default doom-modeline-height 40)
-
-;; mode line initialization hook
-(add-hook 'after-init-hook #'doom-modeline-mode)
+(straight-use-package 'orderless)
+;; (require 'orderless)
 
 #+end_src
-
-** which-key
-:PROPERTIES:
-:header-args:emacs-lisp+: :tangle ./modules/ilusia-module-which-key.el
-:END:
-
-#+begin_src emacs-lisp
-
-;; doom-modeline
-(use-package which-key
-  :hook
-  (after-init . which-key-mode))
-
-#+end_src
-
-** yasnippet
-
-:PROPERTIES:
-:header-args:emacs-lisp+: :tangle ./modules/ilusia-module-yasnippet.el
-:END:
-
-#+begin_src emacs-lisp
-
-(use-package yasnippet
-  :ensure t
-  :config
-  (yas-global-mode 1))
-
-#+end_src
-
 ** eldoc
 
 :PROPERTIES:
@@ -894,202 +1071,6 @@ TODO:  перписать в том ввиде котором мне понра�
 
 #+end_src
 
-** dired
-
-:PROPERTIES:
-:header-args:emacs-lisp+: :tangle ./modules/ilusia-module-dired.el
-:END:
-
-#+begin_src emacs-lisp
-
-(with-eval-after-load 'dired
-  (setq dired-dwim-target t
-    dired-kill-when-opening-new-dired-buffer t)
-
-  (setq dired-listing-switches
-    (if (eq system-type 'gnu/linux)
-      "-lah --group-directories-first"
-      "-lah"))
-
-  (setq dired-guess-shell-alist-user
-    '(("\\.\\(png\\|jpe?g\\|tiff\\)"
-        (cond
-          ((executable-find "feh") "feh")
-          ((executable-find "xdg-open") "xdg-open")
-          (t "open")))
-       ("\\.\\(mp[34]\\|m4a\\|ogg\\|flac\\|webm\\|mkv\\)"
-         (cond
-           ((executable-find "mpv") "mpv")
-           ((executable-find "xdg-open") "xdg-open")
-           (t "open")))
-       (".*"
-         (or (and (executable-find "xdg-open") "xdg-open")
-           "open")))))
-
-(with-eval-after-load 'dired
-  (require 'dired-x)
-
-  ;; NOTE: hide all .meta file. thats for c#
-  (setq dired-omit-files "\\.meta$")
-
-  (add-hook 'dired-mode-hook #'dired-omit-mode))
-
-#+end_src
-
-
-** smerge
-
-:PROPERTIES:
-:header-args:emacs-lisp+: :tangle ./modules/ilusia-module-smerge.el
-:END:
-
-#+begin_src emacs-lisp
-(use-package smerge-mode
-  :ensure nil
-  :defer t
-  :bind (:map smerge-mode-map
-          ("C-c ^ u" . smerge-keep-upper)
-          ("C-c ^ l" . smerge-keep-lower)
-          ("C-c ^ n" . smerge-next)
-          ("C-c ^ p" . smerge-previous)))
-#+end_src
-
-** diff-hl
-
-:PROPERTIES:
-:header-args:emacs-lisp+: :tangle ./modules/ilusia-module-diff-hl.el
-:END:
-
-#+begin_src emacs-lisp
-(use-package diff-hl
-  :defer t
-  :ensure t
-  :hook
-  (find-file . (lambda ()
-                 (global-diff-hl-mode)
-                 (diff-hl-flydiff-mode)
-                 (diff-hl-margin-mode)))
-  :custom
-  (diff-hl-side 'left)
-  (diff-hl-margin-symbols-alist '((insert . "┃")
-                                   (delete . "-")
-                                   (change . "┃")
-                                   (unknown . "┆")
-                                   (ignored . "i"))))
-#+end_src
-
-** hl-todo
-
-:PROPERTIES:
-:header-args:emacs-lisp+: :tangle ./modules/ilusia-module-hl-todo.el
-:END:
-
-#+begin_src emacs-lisp
-(use-package hl-todo
-  :config
-  (global-hl-todo-mode 1))
-#+end_src
-** highlight-indent-guides
-
-:PROPERTIES:
-:header-args:emacs-lisp+: :tangle ./modules/ilusia-module-highlight-indent-guides.el
-:END:
-
-#+begin_src emacs-lisp
-(use-package highlight-indent-guides
-  :hook (prog-mode . highlight-indent-guides-mode)
-  :custom
-  (highlight-indent-guides-method 'character))
-#+end_src
-
-
-** rainbow-delimiters
-
-:PROPERTIES:
-:header-args:emacs-lisp+: :tangle ./modules/ilusia-module-highlight-rainbow-delimiters.el
-:END:
-
-#+begin_src emacs-lisp
-(use-package rainbow-delimiters
-  :ensure t
-
-  :hook
-  (prog-mode . rainbow-delimiters-mode)
-
-  :custom
-  (rainbow-delimiters-max-face-count 9))
-#+end_src
-
-** treesit-auto
-
-:PROPERTIES:
-:header-args:emacs-lisp+: :tangle ./modules/ilusia-module-highlight-treesit-auto.el
-:END:
-
-#+begin_src emacs-lisp
-(use-package treesit-auto
-  :ensure t
-  :custom
-  (treesit-auto-install t)
-  :config
-  (treesit-auto-add-to-auto-mode-alist 'all)
-  (global-treesit-auto-mode t))
-
-;; временный хак в будущем удалить его
-;; честно тут я чуть не бросил emacs настолько это меня вымараживает
-(setq treesit-language-source-alist
-  '((c   "https://github.com/tree-sitter/tree-sitter-c" "v0.23.2")
-     (cpp "https://github.com/tree-sitter/tree-sitter-cpp" "v0.23.2")
-     (css "https://github.com/tree-sitter/tree-sitter-css" "v0.23.2")
-     (html "https://github.com/tree-sitter/tree-sitter-html" "v0.23.2")
-     (javascript "https://github.com/tree-sitter/tree-sitter-javascript" "v0.20.2")))
-#+end_src
-
-** all-the-icons
-
-:PROPERTIES:
-:header-args:emacs-lisp+: :tangle ./modules/ilusia-module-all-the-icons.el
-:END:
-
-
-#+begin_src emacs-lisp
-
-;; Symbol library
-(straight-use-package 'all-the-icons)
-
-#+end_src
-
-Now that ~all-the-icons~ is installed, all the icon typefaces must be actually present in
-the local machine:
-
-#+begin_src emacs-lisp :tangle no
-
-(all-the-icons-install-fonts)
-
-#+end_src
-
-** god-mode
-:PROPERTIES:
-:header-args:emacs-lisp+: :tangle ./modules/ilusia-module-god-mode.el
-:END:
-
-#+begin_src emacs-lisp
-
-(straight-use-package 'god-mode)
-(require 'god-mode)
-
-;; god
-(global-set-key (kbd "<escape>") #'god-mode-all)
-
-;; local
-(define-key god-local-mode-map (kbd "i") #'god-local-mode)
-
-;; bindings
-(define-key god-local-mode-map (kbd ".") #'repeat)
-(define-key god-local-mode-map (kbd "]") #'forward-paragraph)
-(define-key god-local-mode-map (kbd "[") #'backward-paragraph)
-
-#+end_src
 
 * Extensions
 
