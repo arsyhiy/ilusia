@@ -12,5 +12,6 @@
 (define-key god-local-mode-map (kbd "]") #'forward-paragraph)
 (define-key god-local-mode-map (kbd "[") #'backward-paragraph)
 
+
 (provide 'ilusia-module-god-mode)
 ;;; ilusia-module-god-mode.el ends here

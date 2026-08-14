@@ -18,100 +18,102 @@
   "Load an Ilusia EXTENSION by name."
   (ilusia-load-component "extension" extension))
 
-(straight-use-package 'async)
-(require 'async)
+(defconst ilusia--config-files
+  '("ilusia.org" "config.org")
+  "Org files used as Ilusia configuration sources.")
 
-(defun ilusia/tangle-add-provide ()
-  "Add `provide' forms to generated Ilusia components."
-  (dolist (type '("core" "layers" "modules" "extensions"))
+(defconst ilusia--component-directories
+  '("core" "layers" "modules" "extensions")
+  "Directories containing generated Ilusia components.")
+
+(defun ilusia--config-file (file)
+  "Return the absolute path to FILE."
+  (if (string= file "ilusia.org")
+      (expand-file-name file ilusia-directory)
+    (expand-file-name file user-emacs-directory)))
+
+(defun ilusia--clean-generated ()
+  "Remove generated Ilusia component files."
+  (dolist (directory ilusia--component-directories)
     (let ((directory
-           (expand-file-name type ilusia-directory)))
+           (expand-file-name directory ilusia-directory)))
       (when (file-directory-p directory)
         (dolist (file
                  (directory-files
                   directory
                   t
                   "\\`ilusia-.*\\.el\\'"))
-          (with-temp-buffer
-            (insert-file-contents file)
+          (when (file-regular-p file)
+            (delete-file file)))))))
 
-            (goto-char (point-max))
-            (insert
-             "\n"
-             (format "(provide '%s)\n"
-                     (intern
-                      (file-name-sans-extension
-                       (file-name-nondirectory file))))
-             (format ";;; %s ends here\n"
-                     (file-name-nondirectory file)))
+(defun ilusia--add-provide (file)
+  "Add a `provide' form to generated FILE."
+  (with-temp-buffer
+    (insert-file-contents file)
+    (goto-char (point-max))
 
-            (write-region nil nil file nil 'silent)))))))
+    (insert
+     "\n\n"
+     (format
+      "(provide '%s)\n"
+      (intern
+       (file-name-sans-extension
+        (file-name-nondirectory file))))
+     (format
+      ";;; %s ends here\n"
+      (file-name-nondirectory file)))
 
-(defun ilusia/tangle (&optional quiet)
-  "Tangle Ilusia components and user config."
+    (write-region nil nil file nil 'silent)))
+
+(defun ilusia--add-provides ()
+  "Add `provide' forms to all generated Ilusia components."
+  (dolist (directory ilusia--component-directories)
+    (let ((directory
+           (expand-file-name directory ilusia-directory)))
+      (when (file-directory-p directory)
+        (dolist (file
+                 (directory-files
+                  directory
+                  t
+                  "\\`ilusia-.*\\.el\\'"))
+          (when (file-regular-p file)
+            (ilusia--add-provide file)))))))
+
+(defun ilusia--tangle ()
+  "Tangle Ilusia and user configuration."
+  (let ((org-confirm-babel-evaluate nil))
+    (dolist (file ilusia--config-files)
+      (let ((file (ilusia--config-file file)))
+        (when (file-exists-p file)
+          (org-babel-tangle-file file))))))
+
+(defun ilusia-sync (&optional quiet)
+  "Synchronize generated configuration with Ilusia source files."
   (interactive)
 
-  (let ((ilusia-org
-         (expand-file-name "ilusia.org"
-                           ilusia-directory))
-        (config-org
-         (expand-file-name "config.org"
-                           user-emacs-directory))
-        (start-time (current-time)))
+  (let ((start-time (current-time)))
+    (message "|ilusia| Synchronizing configuration...")
 
-    ;; Remove generated Ilusia components.
-    (dolist (dir '("core" "layers" "modules" "extensions"))
-      (let ((directory
-             (expand-file-name dir ilusia-directory)))
-        (when (file-directory-p directory)
-          (dolist (file
-                   (directory-files
-                    directory
-                    t
-                    directory-files-no-dot-files-regexp))
-            (when (file-regular-p file)
-              (delete-file file))))))
+    ;; Remove previously generated components.
+    (ilusia--clean-generated)
 
-    ;; Tangle Ilusia.
-    (let ((org-confirm-babel-evaluate nil))
-      (org-babel-tangle-file ilusia-org)
+    ;; Generate configuration.
+    (ilusia--tangle)
 
-      ;; Add `provide' to generated Ilusia components.
-      (ilusia/tangle-add-provide)
-
-      ;; Tangle user config.
-      (org-babel-tangle-file config-org))
+    ;; Add `provide' forms to generated components.
+    (ilusia--add-provides)
 
     (unless quiet
       (message
-       "|ilusia| Tangled successfully in %.2fs."
+       "|ilusia| Synchronized successfully in %.2fs."
        (float-time
         (time-subtract
          (current-time)
          start-time))))))
 
-(defun ilusia/tangle-auto ()
-  "Automatically tangle configuration after saving."
-  (when buffer-file-name
-    (let ((file (file-truename buffer-file-name))
-          (ilusia-org
-           (file-truename
-            (expand-file-name "ilusia.org"
-                              ilusia-directory)))
-          (config-org
-           (file-truename
-            (expand-file-name "config.org"
-                              user-emacs-directory))))
-
-      (when (or (string-equal file ilusia-org)
-                (string-equal file config-org))
-        (message "|ilusia| Auto-tangle triggered.")
-        (ilusia/tangle)))))
-
-(add-hook 'after-save-hook #'ilusia/tangle-auto)
-
 (straight-use-package 'no-littering)
 (require 'no-littering)
+
 
 (provide 'ilusia-core-config-management)
 ;;; ilusia-core-config-management.el ends here

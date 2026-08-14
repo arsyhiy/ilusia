@@ -1,9 +1,10 @@
 # -*- mode: Org; org-use-property-inheritance: t -*-
-
 #+STARTUP: overview
 #+FILETAGS: :emacs:
 
 #+title:ilusia
+#+TOC: headlines 3
+
 #+PROPERTY: header-args:emacs-lisp :results none :mkdirp yes
 
 * ilusia Core
@@ -11,16 +12,21 @@
 :PROPERTIES:
 :header-args:emacs-lisp+: :tangle ./core/ilusia-core-package-manager.el
 :END:
+
+this project is using straight
 #+begin_src emacs-lisp
 
 (defvar bootstrap-version)
 (let ((bootstrap-file
-       (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
-      (bootstrap-version 5))
+       (expand-file-name
+        "straight/repos/straight.el/bootstrap.el"
+        (or (bound-and-true-p straight-base-dir)
+            user-emacs-directory)))
+      (bootstrap-version 7))
   (unless (file-exists-p bootstrap-file)
     (with-current-buffer
         (url-retrieve-synchronously
-         "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
+         "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
          'silent 'inhibit-cookies)
       (goto-char (point-max))
       (eval-print-last-sexp)))
@@ -31,11 +37,13 @@
 (setq straight-use-package-by-default t)
 
 #+end_src
-** Config management
-:PROPERTIES:
-:header-args:emacs-lisp+: :tangle ./core/ilusia-core-config-management.el
-:END:
-*** Component loading
+* Config management
+  :PROPERTIES:
+  :header-args:emacs-lisp+: :tangle ./core/ilusia-core-config-management.el
+  :END:
+
+** Component loading
+
 #+begin_src emacs-lisp
 
 (defun ilusia-load-component (type component)
@@ -59,143 +67,170 @@
   (ilusia-load-component "extension" extension))
 
 #+end_src
-*** Async tangling
+
+** Configuration paths
+
 #+begin_src emacs-lisp
 
-(straight-use-package 'async)
-(require 'async)
+(defconst ilusia--config-files
+  '("ilusia.org" "config.org")
+  "Org files used as Ilusia configuration sources.")
 
-(defun ilusia/tangle-add-provide ()
-  "Add `provide' forms to generated Ilusia components."
-  (dolist (type '("core" "layers" "modules" "extensions"))
+(defconst ilusia--component-directories
+  '("core" "layers" "modules" "extensions")
+  "Directories containing generated Ilusia components.")
+
+(defun ilusia--config-file (file)
+  "Return the absolute path to FILE."
+  (if (string= file "ilusia.org")
+      (expand-file-name file ilusia-directory)
+    (expand-file-name file user-emacs-directory)))
+
+#+end_src
+
+** Cleaning generated files
+
+#+begin_src emacs-lisp
+
+(defun ilusia--clean-generated ()
+  "Remove generated Ilusia component files."
+  (dolist (directory ilusia--component-directories)
     (let ((directory
-           (expand-file-name type ilusia-directory)))
+           (expand-file-name directory ilusia-directory)))
       (when (file-directory-p directory)
         (dolist (file
                  (directory-files
                   directory
                   t
                   "\\`ilusia-.*\\.el\\'"))
-          (with-temp-buffer
-            (insert-file-contents file)
+          (when (file-regular-p file)
+            (delete-file file)))))))
 
-            (goto-char (point-max))
-            (insert
-             "\n"
-             (format "(provide '%s)\n"
-                     (intern
-                      (file-name-sans-extension
-                       (file-name-nondirectory file))))
-             (format ";;; %s ends here\n"
-                     (file-name-nondirectory file)))
+#+end_src
 
-            (write-region nil nil file nil 'silent)))))))
+** Providing generated components
 
-(defun ilusia/tangle (&optional quiet)
-  "Tangle Ilusia components and user config."
+#+begin_src emacs-lisp
+
+(defun ilusia--add-provide (file)
+  "Add a `provide' form to generated FILE."
+  (with-temp-buffer
+    (insert-file-contents file)
+    (goto-char (point-max))
+
+    (insert
+     "\n\n"
+     (format
+      "(provide '%s)\n"
+      (intern
+       (file-name-sans-extension
+        (file-name-nondirectory file))))
+     (format
+      ";;; %s ends here\n"
+      (file-name-nondirectory file)))
+
+    (write-region nil nil file nil 'silent)))
+
+(defun ilusia--add-provides ()
+  "Add `provide' forms to all generated Ilusia components."
+  (dolist (directory ilusia--component-directories)
+    (let ((directory
+           (expand-file-name directory ilusia-directory)))
+      (when (file-directory-p directory)
+        (dolist (file
+                 (directory-files
+                  directory
+                  t
+                  "\\`ilusia-.*\\.el\\'"))
+          (when (file-regular-p file)
+            (ilusia--add-provide file)))))))
+
+#+end_src
+
+** Tangle configuration
+
+#+begin_src emacs-lisp
+
+(defun ilusia--tangle ()
+  "Tangle Ilusia and user configuration."
+  (let ((org-confirm-babel-evaluate nil))
+    (dolist (file ilusia--config-files)
+      (let ((file (ilusia--config-file file)))
+        (when (file-exists-p file)
+          (org-babel-tangle-file file))))))
+
+#+end_src
+
+** Sync
+
+#+begin_src emacs-lisp
+
+(defun ilusia-sync (&optional quiet)
+  "Synchronize generated configuration with Ilusia source files."
   (interactive)
 
-  (let ((ilusia-org
-         (expand-file-name "ilusia.org"
-                           ilusia-directory))
-        (config-org
-         (expand-file-name "config.org"
-                           user-emacs-directory))
-        (start-time (current-time)))
+  (let ((start-time (current-time)))
+    (message "|ilusia| Synchronizing configuration...")
 
-    ;; Remove generated Ilusia components.
-    (dolist (dir '("core" "layers" "modules" "extensions"))
-      (let ((directory
-             (expand-file-name dir ilusia-directory)))
-        (when (file-directory-p directory)
-          (dolist (file
-                   (directory-files
-                    directory
-                    t
-                    directory-files-no-dot-files-regexp))
-            (when (file-regular-p file)
-              (delete-file file))))))
+    ;; Remove previously generated components.
+    (ilusia--clean-generated)
 
-    ;; Tangle Ilusia.
-    (let ((org-confirm-babel-evaluate nil))
-      (org-babel-tangle-file ilusia-org)
+    ;; Generate configuration.
+    (ilusia--tangle)
 
-      ;; Add `provide' to generated Ilusia components.
-      (ilusia/tangle-add-provide)
-
-      ;; Tangle user config.
-      (org-babel-tangle-file config-org))
+    ;; Add `provide' forms to generated components.
+    (ilusia--add-provides)
 
     (unless quiet
       (message
-       "|ilusia| Tangled successfully in %.2fs."
+       "|ilusia| Synchronized successfully in %.2fs."
        (float-time
         (time-subtract
          (current-time)
          start-time))))))
 
-(defun ilusia/tangle-auto ()
-  "Automatically tangle configuration after saving."
-  (when buffer-file-name
-    (let ((file (file-truename buffer-file-name))
-          (ilusia-org
-           (file-truename
-            (expand-file-name "ilusia.org"
-                              ilusia-directory)))
-          (config-org
-           (file-truename
-            (expand-file-name "config.org"
-                              user-emacs-directory))))
-
-      (when (or (string-equal file ilusia-org)
-                (string-equal file config-org))
-        (message "|ilusia| Auto-tangle triggered.")
-        (ilusia/tangle)))))
-
-(add-hook 'after-save-hook #'ilusia/tangle-auto)
-
 #+end_src
-*** No littering
+
+** No littering
+
+Plugin repository: https://github.com/emacscollective/no-littering
+
 #+begin_src emacs-lisp
 
 (straight-use-package 'no-littering)
 (require 'no-littering)
 
 #+end_src
-
 * Layers
-this section is for describing layers in undersections
 ** UI
-это раздел для UI и все связанное
-то что  напрямую относится к пользовательскому интерфейсу
-
 *** UI-layer
 :PROPERTIES:
 :header-args:emacs-lisp+: :tangle ./layers/ilusia-layer-ui.el
 :END:
 **** Text
-все что относится к тексту напряммую
 ***** Typefaces
 
 #+begin_src emacs-lisp
 
 ;; icons
-; (ilusia-module 'all-the-icons)
+(ilusia-module 'all-the-icons)
 
 #+end_src
 
-***** Highlights
+***** decorations
 
 #+begin_src emacs-lisp
-
-;; highlights
-;(ilusia-module 'rainbow-mode)
+;;TODO: сюда нунжо засунуть то что как либо изменяет или влияет на текст 
+(ilusia-module 'hl-todo)
+(ilusia-module 'highlight-indent-guides)
+(ilusia-module 'highlight-rainbow-delimiters)
 
 #+end_src
 
 **** Buffer
 
 #+begin_src emacs-lisp
+;;TODO: найти и добавить что что влияет на буффер внешене
 
 ;; ;; centering
 ;; (mirage-module 'olivetti)
@@ -205,9 +240,8 @@ this section is for describing layers in undersections
 
 #+end_src
 **** Frame
-все что относится к frame или точнее где через что вы взаимодействуюте с буффером
 #+begin_src emacs-lisp
-
+;; TODO: написать этот как умнея в конфиге
 ;; size
 (add-to-list 'default-frame-alist '(height . 50))
 (add-to-list 'default-frame-alist '(width  . 70))
@@ -231,7 +265,7 @@ this section is for describing layers in undersections
 **** Window
 
 #+begin_src emacs-lisp
-
+;; TODO: понять что я реально считаю нужным добавить союда 
 ;; ;; fringes
 ;; (set-fringe-mode nil)
 
@@ -242,17 +276,19 @@ this section is for describing layers in undersections
 ;; (setq split-width-threshold 70)
 
 #+end_src
-**** Warnings
+**** bell
 
 #+begin_src emacs-lisp
 
-;; ;; visible bell
-;; (setq visible-bell t)
+;; TODO: решить как будить работать bell либо звук либо визуально а то и просто отключить
+;; visible bell
+(setq visible-bell t)
 
 #+end_src
 **** Mode line
 
 #+begin_src emacs-lisp
+;;TODO: решить что мне нужно из mode для mode line
 
 ;; time
 ;; (display-time-mode t)
@@ -268,10 +304,18 @@ this section is for describing layers in undersections
 **** Extensions
 
 #+begin_src emacs-lisp
-
+;; TODO:  написать хотябы один extension для ui
 ;; extensions
 ;;(ilusia-extend 'ui)
 
+#+end_src
+
+*** Treesitter support 
+:PROPERTIES:
+:header-args:emacs-lisp+: :tangle ./layers/ilusia-layer-treesitter.el
+:END:
+#+begin_src emacs-lisp
+(ilusia-module 'highlight-treesit-auto)
 #+end_src
 *** Doom
 :PROPERTIES:
@@ -279,10 +323,12 @@ this section is for describing layers in undersections
 :END:
 #+begin_src emacs-lisp
 
-;; modules
 (ilusia-module 'doom-modeline)
-;; extensions
-;; (ilusia-extend 'theme-modeline)
+
+(setq-default doom-modeline-height 40)
+
+;; mode line initialization hook
+(add-hook 'after-init-hook #'doom-modeline-mode)
 
 #+end_src
 *** Dashboard
@@ -290,13 +336,6 @@ this section is for describing layers in undersections
 :header-args:emacs-lisp+: :tangle ./layers/ilusia-layer-dashboard.el
 :END:
 #+begin_src emacs-lisp
-
-;;; ilusia-dashboard.el --- Dashboard layer -*- lexical-binding: t; -*-
-
-;;; Commentary:
-;; Configuration for Emacs Dashboard.
-
-;;; Code:
 
 (ilusia-module 'emacs-dashboard)
 
@@ -310,20 +349,18 @@ this section is for describing layers in undersections
         (registers . 5)
         (agenda    . 5)))
 
-(setq dashboard-banner-logo-title "⚓ Welcome on Board! ⚓")
-
 #+end_src
 
 ** development
-все что нужно или относится для разработки
 *** Version control
 :PROPERTIES:
 :header-args:emacs-lisp+: :tangle ./layers/ilusia-layer-version-control.el
 :END:
 
+all functionality for vs
 #+begin_src emacs-lisp
-
 (ilusia-module 'magit)
+(ilusia-module 'smerge)
 
 #+end_src
 
@@ -334,7 +371,24 @@ this section is for describing layers in undersections
 
 #+begin_src emacs-lisp
 
-;; пока пустой!!!
+(ilusia-module 'yasnippet)
+(ilusia-module 'eldoc)
+(ilusia-module 'flymake)
+(ilusia-module 'lsp)
+(ilusia-module 'cape)
+(ilusia-module 'corfu)
+
+
+(ilusia-module 'cc)
+(ilusia-module 'css)
+(ilusia-module 'elisp)
+(ilusia-module 'html)
+(ilusia-module 'js)
+(ilusia-module 'markdown)
+(ilusia-module 'org)
+(ilusia-module 'python)
+(ilusia-module 'typescript)
+
 
 #+end_src
 
@@ -343,16 +397,17 @@ this section is for describing layers in undersections
 :header-args:emacs-lisp+: :tangle ./layers/ilusia-layer-input.el
 :END:
 
- все что влеят на вввод 
 #+begin_src emacs-lisp
 
 ;; confirmation
 (advice-add 'yes-or-no-p :override #'y-or-n-p)
+
 ;; advanced commands
 (put 'narrow-to-region 'disabled nil)
 
 ;; modules
 (ilusia-module 'evil)
+
 (ilusia-module 'god-mode)
 
 #+end_src
@@ -362,9 +417,7 @@ this section is for describing layers in undersections
 :header-args:emacs-lisp+: :tangle ./layers/ilusia-layer-Editing.el
 :END:
 
- все что влеят на editing
 #+begin_src emacs-lisp
-;; пока что пусто
 #+end_src
 ** Navigation
 :PROPERTIES:
@@ -378,30 +431,12 @@ this section is for describing layers in undersections
 (setq auto-window-vscroll nil)
 (setq mouse-wheel-progressive-speed nil)
 
-;; horizontal scrolling
-(put 'scroll-left  'disabled nil)
-(put 'scroll-right 'disabled nil)
-;; mouse wheel
-;; (global-set-key (kbd "S-<wheel-up>")    (lambda () (interactive) (scroll-right 2)))
-;; (global-set-key (kbd "S-<wheel-down>")  (lambda () (interactive) (scroll-left  2)))
-;; ;; mouse side wheel
-;; (global-set-key (kbd "S-<wheel-left>")  (lambda () (interactive) (scroll-right 4)))
-;; (global-set-key (kbd "S-<wheel-right>") (lambda () (interactive) (scroll-left  4)))
-
-;; buffers
-(global-set-key (kbd "M-<delete>") #'bury-buffer)
-
 ;; windows
 (winner-mode)
 
-;; modules
-;; (mirage-module 'ace-window)
-
-;; extensions
-;; (mirage-extend 'navigation)
-
-;; bindings
-;; (global-set-key (kbd "C-S-n") #'make-frame-command)
+(ilusia-module 'consult)
+(ilusia-module 'dired)
+(ilusia-module 'isearch)
 
 #+end_src
 ** File management
@@ -420,17 +455,12 @@ this section is for describing layers in undersections
 (setq kept-new-versions 2)
 (setq kept-old-versions 2)
 
-;; file manager
-;; (mirage-module 'dirvish)
-
-;; ;; extensions
-;; (mirage-extend 'file-management)
 
 #+end_src
 
-
 * Modules
 this section is for discribing modules
+TODO: к всем модулям. довести каждый модуль до разумного минимума а если в моем конфиге есть полезное больше разумного минимума добавить 
 
 ** development
 *** magit
@@ -447,7 +477,6 @@ this section is for discribing modules
 
 #+end_src
 *** smerge
-
 :PROPERTIES:
 :header-args:emacs-lisp+: :tangle ./modules/ilusia-module-smerge.el
 :END:
@@ -474,11 +503,114 @@ this section is for discribing modules
 ;; evil
 (use-package evil
   :ensure t
+  :hook
+  (after-init . evil-mode)
+  :init
+  (setq evil-want-integration t)
+  (setq evil-want-keybinding nil)
+  (setq evil-want-C-u-scroll t)
+  (setq evil-want-C-u-delete t)
   :config
-  (evil-mode 1))
+  (evil-set-initial-state 'eshell-mode 'emacs)
+  (evil-set-initial-state 'shell-mode 'emacs)
+  (evil-set-undo-system 'undo-tree)
+
+  (setq evil-leader/in-all-states t)
+  (setq evil-want-fine-undo t)
+
+  (evil-set-leader 'normal (kbd "SPC"))
+  (evil-set-leader 'visual (kbd "SPC"))
+
+  (evil-define-key 'normal 'global (kbd "<leader> s f") 'consult-find)
+  (evil-define-key 'normal 'global (kbd "<leader> s g") 'consult-grep)
+  (evil-define-key 'normal 'global (kbd "<leader> s G") 'consult-git-grep)
+  (evil-define-key 'normal 'global (kbd "<leader> s r") 'consult-ripgrep)
+  (evil-define-key 'normal 'global (kbd "<leader> s h") 'consult-info)
+  (evil-define-key 'normal 'global (kbd "<leader> /") 'consult-line)
+
+  (evil-define-key 'normal 'global (kbd "<leader> x x") 'consult-flymake)
+  (evil-define-key 'normal 'global (kbd "] d") 'flymake-goto-next-error)
+  (evil-define-key 'normal 'global (kbd "[ d") 'flymake-goto-prev-error)
+
+  (evil-define-key 'normal 'global (kbd "<leader> d d") 'dired)
+  (evil-define-key 'normal 'global (kbd "<leader> d j") 'dired-jump)
+  (evil-define-key 'normal 'global (kbd "<leader> x f") 'find-file)
+
+  (evil-define-key 'normal 'global (kbd "] c") 'diff-hl-next-hunk)
+  (evil-define-key 'normal 'global (kbd "[ c") 'diff-hl-previous-hunk)
+
+  (evil-define-key 'normal 'global (kbd "<leader> g g") 'magit-status)
+  (evil-define-key 'normal 'global (kbd "<leader> g l") 'magit-log-current)
+  (evil-define-key 'normal 'global (kbd "<leader> g d") 'magit-diff-buffer-file)
+  (evil-define-key 'normal 'global (kbd "<leader> g D") 'diff-hl-show-hunk)
+  (evil-define-key 'normal 'global (kbd "<leader> g b") 'vc-annotate)
+
+  (evil-define-key 'normal 'global (kbd "] b") 'switch-to-next-buffer)
+  (evil-define-key 'normal 'global (kbd "[ b") 'switch-to-prev-buffer)
+  (evil-define-key 'normal 'global (kbd "<leader> b i") 'consult-buffer)
+  (evil-define-key 'normal 'global (kbd "<leader> b b") 'ibuffer)
+  (evil-define-key 'normal 'global (kbd "<leader> b d") 'kill-current-buffer)
+  (evil-define-key 'normal 'global (kbd "<leader> b k") 'kill-current-buffer)
+  (evil-define-key 'normal 'global (kbd "<leader> b x") 'kill-current-buffer)
+  (evil-define-key 'normal 'global (kbd "<leader> b s") 'save-buffer)
+  (evil-define-key 'normal 'global (kbd "<leader>SPC") 'consult-buffer)
+
+  (evil-define-key 'normal 'global (kbd "<leader> p b") 'consult-project-buffer)
+  (evil-define-key 'normal 'global (kbd "<leader> p p") 'project-switch-project)
+  (evil-define-key 'normal 'global (kbd "<leader> p f") 'project-find-file)
+  (evil-define-key 'normal 'global (kbd "<leader> p g") 'project-find-regexp)
+  (evil-define-key 'normal 'global (kbd "<leader> p k") 'project-kill-buffers)
+  (evil-define-key 'normal 'global (kbd "<leader> p D") 'project-dired)
+
+  (evil-define-key 'normal 'global (kbd "P") 'consult-yank-from-kill-ring)
+  (evil-define-key 'normal 'global (kbd "<leader> P") 'consult-yank-from-kill-ring)
+
+  (evil-define-key 'normal 'global (kbd "<leader> .") 'embark-act)
+
+  (evil-define-key 'normal 'global (kbd "<leader> u") 'undo-tree-visualize)
+
+  (evil-define-key 'normal 'global (kbd "<leader> h m") 'describe-mode)
+  (evil-define-key 'normal 'global (kbd "<leader> h f") 'describe-function)
+  (evil-define-key 'normal 'global (kbd "<leader> h v") 'describe-variable)
+  (evil-define-key 'normal 'global (kbd "<leader> h k") 'describe-key)
+
+  (evil-define-key 'normal 'global (kbd "] t") 'tab-next)
+  (evil-define-key 'normal 'global (kbd "[ t") 'tab-previous)
+
+(evil-define-key 'normal 'global (kbd "gcc")
+    (lambda ()
+      (interactive)
+      (if (not (use-region-p))
+        (comment-or-uncomment-region (line-beginning-position) (line-end-position)))))
+
+  (evil-define-key 'visual 'global (kbd "gc")
+    (lambda ()
+      (interactive)
+      (if (use-region-p)
+        (comment-or-uncomment-region (region-beginning) (region-end)))))
+
+  
+   (evil-mode 1))
 ;; (require 'evil)
 ;; bindings
-;; (global-set-key (kbd "C-<escape>") #'evil-mode)
+(global-set-key (kbd "C-<escape>") #'evil-mode)
+
+
+(use-package evil-collection
+  :custom
+  (evil-collection-want-find-usages-bindings t)
+  :hook
+  (evil-mode . evil-collection-init))
+
+(use-package evil-surround
+  :after evil-collection
+  :config
+  (global-evil-surround-mode 1))
+
+(use-package evil-matchit
+  :after evil-collection
+  :config
+  (global-evil-matchit-mode 1))
 
 #+end_src
 
@@ -504,17 +636,32 @@ this section is for discribing modules
 #+begin_src emacs-lisp
 
 (use-package undo-tree
-  :hook (prog-mode . undo-tree-mode))
-;; (require 'undo-tree)
+  :ensure t
+  :demand t
+
+  :hook
+  (prog-mode . undo-tree-mode)
+
+  :custom
+  (undo-tree-auto-save-history t)
+  (undo-tree-visualizer-timestamps t)
+  (undo-tree-visualizer-diff t)
+  (undo-tree-history-directory-alist
+   `(("." . ,(expand-file-name "undo" user-emacs-directory))))
+
+  (undo-limit 16000000)
+  (undo-strong-limit 32000000)
+  (undo-outer-limit 128000000)
+
+  :config
+  (global-undo-tree-mode 1))
 
 #+end_src
 
 *** yasnippet
-
 :PROPERTIES:
 :header-args:emacs-lisp+: :tangle ./modules/ilusia-module-yasnippet.el
 :END:
-
 #+begin_src emacs-lisp
 
 (use-package yasnippet
@@ -580,12 +727,13 @@ TODO:  перписать в том ввиде котором мне понра�
 в оригинале препологается что themes это отдельный раздел как и UI решил обьеденить
 #+begin_src emacs-lisp
 
-(straight-use-package '(ef-themes :type git :host nil :repo "https://git.sr.ht/~protesilaos/ef-themes"))
+(use-package ef-themes
+   :ensure t 
+    )
+
 ;; (require 'ef-themes)
 
 #+end_src
-
-*** Mode line
 
 *** Doom-theme
 :PROPERTIES:
@@ -599,23 +747,13 @@ TODO:  перписать в том ввиде котором мне понра�
 
 #+end_src
 
-*** Doom
+*** Doom modeline
 :PROPERTIES:
 :header-args:emacs-lisp+: :tangle ./modules/ilusia-module-doom-modeline.el
 :END:
 
 #+begin_src emacs-lisp
-
-;; doom-modeline
 (straight-use-package 'doom-modeline)
-
-;; bar
-;;(setq-default doom-modeline-bar-width 0.01)
-  (setq-default doom-modeline-height 40)
-
-;; mode line initialization hook
-(add-hook 'after-init-hook #'doom-modeline-mode)
-
 #+end_src
 
 *** diff-hl
@@ -625,6 +763,7 @@ TODO:  перписать в том ввиде котором мне понра�
 :END:
 
 #+begin_src emacs-lisp
+
 (use-package diff-hl
   :defer t
   :ensure t
@@ -643,22 +782,22 @@ TODO:  перписать в том ввиде котором мне понра�
 #+end_src
 
 *** hl-todo
-
 :PROPERTIES:
 :header-args:emacs-lisp+: :tangle ./modules/ilusia-module-hl-todo.el
 :END:
 
 #+begin_src emacs-lisp
+
 (use-package hl-todo
+  :ensure t
+ 
   :config
   (global-hl-todo-mode 1))
 #+end_src
 *** highlight-indent-guides
-
 :PROPERTIES:
 :header-args:emacs-lisp+: :tangle ./modules/ilusia-module-highlight-indent-guides.el
 :END:
-
 #+begin_src emacs-lisp
 (use-package highlight-indent-guides
   :hook (prog-mode . highlight-indent-guides-mode)
@@ -667,11 +806,9 @@ TODO:  перписать в том ввиде котором мне понра�
 #+end_src
 
 *** rainbow-delimiters
-
 :PROPERTIES:
 :header-args:emacs-lisp+: :tangle ./modules/ilusia-module-highlight-rainbow-delimiters.el
 :END:
-
 #+begin_src emacs-lisp
 (use-package rainbow-delimiters
   :ensure t
@@ -684,11 +821,9 @@ TODO:  перписать в том ввиде котором мне понра�
 #+end_src
 
 *** treesit-auto
-
 :PROPERTIES:
 :header-args:emacs-lisp+: :tangle ./modules/ilusia-module-highlight-treesit-auto.el
 :END:
-
 #+begin_src emacs-lisp
 (use-package treesit-auto
   :ensure t
@@ -709,11 +844,9 @@ TODO:  перписать в том ввиде котором мне понра�
 #+end_src
 
 *** all-the-icons
-
 :PROPERTIES:
 :header-args:emacs-lisp+: :tangle ./modules/ilusia-module-all-the-icons.el
 :END:
-
 
 #+begin_src emacs-lisp
 
@@ -730,8 +863,6 @@ the local machine:
 (all-the-icons-install-fonts)
 
 #+end_src
-
-
 
 ** library
 *** projectile
@@ -760,8 +891,27 @@ the local machine:
 
 #+begin_src emacs-lisp
 
-(straight-use-package 'consult)
-;; (require 'consult)
+(use-package consult
+  :ensure t
+
+  :init
+  (setq xref-show-xrefs-function #'consult-xref
+        xref-show-definitions-function #'consult-xref)
+
+  :config
+
+  (with-eval-after-load 'register
+    (setq register-preview-function #'consult-register-window))
+
+  (setq consult-narrow-key "<"
+        consult-preview-key 'any)
+
+  (setq consult-buffer-display-action #'display-buffer-same-window)
+
+  (setq consult-async-min-input 2
+        consult-async-refresh-delay 0.15
+        consult-async-input-throttle 0.2
+        consult-async-input-debounce 0.3))
 
 #+end_src
 
@@ -772,9 +922,14 @@ the local machine:
 
 #+begin_src emacs-lisp
 
-(straight-use-package 'marginalia)
-;; (require 'marginalia)
-(marginalia-mode)
+(use-package marginalia
+  :ensure t
+  :hook (after-init . marginalia-mode)
+
+  :custom
+  (marginalia-align 'right)
+  (marginalia-align-offset 8)
+  (marginalia-max-relative-age 0))
 
 #+end_src
 *** vertico 
@@ -784,46 +939,19 @@ the local machine:
 
 #+begin_src emacs-lisp
 
-(require 'savehist)
-(savehist-mode)
+(use-package vertico
+  :ensure t
+  :hook
+  (after-init . vertico-mode)
 
-(straight-use-package 'vertico)
-(vertico-mode)
-
-(defun crm-indicator (args)
-  (cons (format "[CRM%s] %s"
-                (replace-regexp-in-string
-                 "\\`\\[.*?]\\*\\|\\[.*?]\\*\\'" ""
-                 crm-separator)
-                (car args))
-        (cdr args)))
-(advice-add 'completing-read-multiple :filter-args #'crm-indicator)
-
-(setq minibuffer-prompt-properties
-      '(read-only t cursor-intangible t face minibuffer-prompt))
-(add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
-
-(setq enable-recursive-minibuffers t)
+  :custom
+  (vertico-count 10)
+  (vertico-resize nil)
+  (vertico-cycle nil)
+  (vertico-preselect 'directory))
 
 #+end_src
-*** helm
-:PROPERTIES:
-:header-args:emacs-lisp+: :tangle ./modules/ilusia-module-helm.el
-:END:
-
-#+begin_src emacs-lisp
-
-  (use-package helm
-)
-    
-;; (require 'helm)
-(helm-mode 1) ; facultative.
-
-#+end_src
-
-
 *** dired
-
 :PROPERTIES:
 :header-args:emacs-lisp+: :tangle ./modules/ilusia-module-dired.el
 :END:
@@ -871,12 +999,22 @@ the local machine:
 
 #+begin_src emacs-lisp
 
-(straight-use-package 'orderless)
-;; (require 'orderless)
+(use-package orderless
+  :ensure t
+
+  :init
+  (setq completion-styles '(orderless basic)
+        completion-category-defaults nil
+        completion-category-overrides
+        '((file (styles partial-completion))
+          (command (styles orderless))
+          (symbol (styles orderless))
+          (variable (styles orderless))))
+
+  (setq completion-flex-nospace t))
 
 #+end_src
 ** eldoc
-
 :PROPERTIES:
 :header-args:emacs-lisp+: :tangle ./modules/ilusia-module-eldoc.el
 :END:
@@ -902,7 +1040,6 @@ the local machine:
 #+end_src
 
 ** flymake
-
 :PROPERTIES:
 :header-args:emacs-lisp+: :tangle ./modules/ilusia-module-flymake.el
 :END:
@@ -925,11 +1062,9 @@ the local machine:
 #+end_src
 
 ** isearch
-
 :PROPERTIES:
-:header-args:emacs-lisp+: :tangle ./modules/ilusiam-module-isearch.el
+:header-args:emacs-lisp+: :tangle ./modules/ilusia-module-isearch.el
 :END:
-
 #+begin_src emacs-lisp
 
 (with-eval-after-load 'isearch
@@ -941,7 +1076,6 @@ the local machine:
 
 #+end_src
 ** lsp
-
 :PROPERTIES:
 :header-args:emacs-lisp+: :tangle ./modules/ilusia-module-lsp.el
 :END:
@@ -1016,11 +1150,9 @@ the local machine:
 #+end_src
 
 ** cape
-
 :PROPERTIES:
 :header-args:emacs-lisp+: :tangle ./modules/ilusia-module-cape.el
 :END:
-
 #+begin_src emacs-lisp
 
 (use-package cape
@@ -1045,7 +1177,6 @@ the local machine:
 #+end_src
 
 ** vterm
-
 :PROPERTIES:
 :header-args:emacs-lisp+: :tangle ./modules/ilusia-module-vterm.el
 :END:
@@ -1071,10 +1202,236 @@ the local machine:
 
 #+end_src
 
+** corfu
+:PROPERTIES:
+:header-args:emacs-lisp+: :tangle ./modules/ilusia-module-corfu.el
+:END:
+
+#+begin_src emacs-lisp
+(use-package corfu
+  :ensure t
+  :defer t
+  :custom
+  (corfu-auto t)
+  (corfu-auto-prefix 3)
+  (corfu-quit-no-match nil)
+  (corfu-scroll-margin 5)
+  (corfu-max-width 50)
+  (corfu-min-width 50)
+  (corfu-popupinfo-delay 0.5)
+  :config
+  :init
+  (global-corfu-mode)
+  (corfu-popupinfo-mode t))
+
+#+end_src
+
+** languages
+*** cc-mode
+:PROPERTIES:
+:header-args:emacs-lisp+: :tangle ./modules/ilusia-module-cc.el
+:END:
+
+#+begin_src emacs-lisp
+(use-package c-ts-mode
+  :ensure nil
+  :mode
+  ("\\.c\\'" . c-ts-mode)
+  ("\\.h\\'" . c-or-c++-ts-mode)
+  ("\\.cpp\\'" . c++-ts-mode)
+  ("\\.hpp\\'" . c++-ts-mode)
+
+  :bind
+  (:map c-ts-mode-map
+    ("<f1>" . my-c/make-clean)
+    ("<f2>" . my-c/make-all)
+    ("<f3>" . my-c/make-run))
+
+  :config
+
+  (c-ts-indent-offset 4)
+  (c-ts-mode-indent-style 'linux)
+
+  (c-ts-mode-enable-doxygen t)
+
+  (eletric-pair-mode 1))
+
+(defun my-c/make-clean ()
+  "Run make clean in project root."
+  (interactive)
+  (let ((default-directory (projectile-project-root)))
+    (compile "make clean")))
+
+(defun my-c/make-all ()
+  "Run make all in project root."
+  (interactive)
+  (let ((default-directory (projectile-project-root)))
+    (compile "make all")))
+
+(defun my-c/make-run ()
+  "Run make run in project root."
+  (interactive)
+  (let ((default-directory (projectile-project-root)))
+    (compile "make run")))
+
+;; todo: add make-custom with arguments memory.
+
+#+end_src
+
+*** css-mode
+:PROPERTIES:
+:header-args:emacs-lisp+: :tangle ./modules/ilusia-module-css.el
+:END:
+
+#+begin_src emacs-lisp
+(use-package css-ts-mode
+  :straight nil
+  :ensure nil
+  :mode "\\.css\\'"
+  :hook
+  (css-ts-mode . electric-pair-local-mode)
+  (css-ts-mode . (lambda ()
+                   (setq-local tab-width 2
+                     css-indent-offset 2)))
+  :config
+  (add-to-list 'major-mode-remap-alist
+    '(css-mode . css-ts-mode)))
+
+#+end_src
+
+*** elisp-mode
+:PROPERTIES:
+:header-args:emacs-lisp+: :tangle ./modules/ilusia-module-elisp.el
+:END:
+
+#+begin_src emacs-lisp
+
+;; TODO: переписать конфиг для  emacs lisp
+(defun my-elisp-mode-setup ()
+  "Setup for elisp."
+  (electric-pair-local-mode 1)
+  (show-paren-local-mode 1)
+  (eldoc-mode 1)
+  (prettify-symbols-mode 1)
+
+  (setq-local indent-tabs-mode nil
+    lisp-indent-offset 2)
+
+  (local-set-key (kbd "C-c C-e") #'eval-last-sexp)
+  (local-set-key (kbd "C-c C-r") #'eval-region)
+  (local-set-key (kbd "C-c C-b") #'eval-buffer)
+
+  (add-hook 'before-save-hook
+    (lambda ()
+      (indent-region (point-min) (point-max)))
+    nil t))
+
+(add-hook 'emacs-lisp-mode-hook #'my-elisp-mode-setup)
+
+#+end_src
+
+*** html-mode
+:PROPERTIES:
+:header-args:emacs-lisp+: :tangle ./modules/ilusia-module-html.el
+:END:
+
+#+begin_src emacs-lisp
+(use-package html-ts-mode
+  :ensure nil
+  :mode ("\\.html?\\'" . html-ts-mode)
+
+  :custom
+  (sgml-basic-offset 2)
+
+  :hook
+  (html-ts-mode . (lambda ()
+                    (setq-local tab-width 2)
+                    (electric-pair-local-mode 1)
+                    (display-line-numbers-mode 1))))
+
+#+end_src
+
+*** js-mode
+:PROPERTIES:
+:header-args:emacs-lisp+: :tangle ./modules/ilusia-module-js.el
+:END:
+
+#+begin_src emacs-lisp
+(defun my-js-mode-setup ()
+  "Setq-local vars for 'js-mode'."
+  (setq-local js-indent-level 2
+    tab-width 2
+    treesit-font-lock-level 4))
+
+(use-package js
+  :mode "\\.js\\'"
+  :hook
+  ((js-ts-mode . my-js-mode-setup)
+    (js-ts-mode . electric-pair-local-mode))
+  )
+
+#+end_src
+
+*** markdown-mode
+:PROPERTIES:
+:header-args:emacs-lisp+: :tangle ./modules/ilusia-module-markdown.el
+:END:
+
+#+begin_src emacs-lisp
+(use-package markdown-mode
+  :defer t
+  :ensure t
+  :mode ("README\\.md\\'" . gfm-mode)
+  :init (setq markdown-command "multimarkdown"))
+
+#+end_src
+
+*** org-mode
+:PROPERTIES:
+:header-args:emacs-lisp+: :tangle ./modules/ilusia-module-org.el
+:END:
+
+#+begin_src emacs-lisp
+(require 'org)
+
+(add-hook 'org-mode-hook #'auto-fill-mode)
+
+(add-hook 'org-mode-hook
+          (lambda ()
+            (setq-local fill-column 80)))
+
+#+end_src
+
+*** python-mode
+:PROPERTIES:
+:header-args:emacs-lisp+: :tangle ./modules/ilusia-module-python.el
+:END:
+
+#+begin_src emacs-lisp
+(use-package python
+  :ensure nil
+  :mode ("\\.py\\'" . python-ts-mode)
+  :hook ((python-ts-mode . lsp-deferred)))
+
+#+end_src
+
+*** typescript-mode
+:PROPERTIES:
+:header-args:emacs-lisp+: :tangle ./modules/ilusia-module-typescript.el
+:END:
+
+#+begin_src emacs-lisp
+(use-package typescript-mode
+  :init
+  (add-to-list 'major-mode-remap-alist
+    '(typescript-mode . typescript-ts-mode))
+  (add-to-list 'major-mode-remap-alist
+    '(js-mode . js-ts-mode)))
+
+#+end_src
 
 * Extensions
-
-
+TODO: добавить все что есть из моего конфига по смыслу являющеся extensions
 ** Mode line
 :PROPERTIES:
 :header-args:emacs-lisp+: :tangle ./extensions/ilusia-extension-theme-modeline.el

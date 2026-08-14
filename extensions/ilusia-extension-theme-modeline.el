@@ -25,5 +25,6 @@
 (let ((active-theme (car custom-enabled-themes)))
   (if active-theme (enable-theme active-theme)))
 
+
 (provide 'ilusia-extension-theme-modeline)
 ;;; ilusia-extension-theme-modeline.el ends here

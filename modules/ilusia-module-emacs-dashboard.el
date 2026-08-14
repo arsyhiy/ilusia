@@ -13,5 +13,6 @@
 (provide 'ilusia-module-emacs-dashboard)
 ;;; ilusia-emacs-dashboard.el ends here
 
+
 (provide 'ilusia-module-emacs-dashboard)
 ;;; ilusia-module-emacs-dashboard.el ends here

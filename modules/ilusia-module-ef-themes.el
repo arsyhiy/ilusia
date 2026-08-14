@@ -1,5 +1,9 @@
-(straight-use-package '(ef-themes :type git :host nil :repo "https://git.sr.ht/~protesilaos/ef-themes"))
+(use-package ef-themes
+   :ensure t 
+    )
+
 ;; (require 'ef-themes)
+
 
 (provide 'ilusia-module-ef-themes)
 ;;; ilusia-module-ef-themes.el ends here
