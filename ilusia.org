@@ -385,7 +385,7 @@ all functionality for vs
 (ilusia-module 'html)
 (ilusia-module 'js)
 (ilusia-module 'markdown)
-(ilusia-module 'org)
+(ilusia-module 'org-basic)
 (ilusia-module 'python)
 (ilusia-module 'typescript)
 
@@ -1388,17 +1388,26 @@ the local machine:
 
 *** org-mode
 :PROPERTIES:
-:header-args:emacs-lisp+: :tangle ./modules/ilusia-module-org.el
+:header-args:emacs-lisp+: :tangle ./modules/ilusia-module-org-basic.el
 :END:
+ilusia have a very basic config for org mode because every one has very personal
+config for them self, so why even try to?
+
+NOTE: maybe add some settings for beginers only purpose.
+
+in fact i very recomend you to make own use-package org, this one i'll try to make
+more comfortable for me and people who litle more than just basic 
 
 #+begin_src emacs-lisp
-(require 'org)
 
-(add-hook 'org-mode-hook #'auto-fill-mode)
+(use-package org
+  :ensure nil ;; org is a built in package 
 
-(add-hook 'org-mode-hook
-          (lambda ()
-            (setq-local fill-column 80)))
+  :mode ("\\.org\\'" . org-mode)
+  :bind
+   (("\C-ca" . org-agenda))
+  :custom
+  (org-startup-folded 'overview))
 
 #+end_src
 

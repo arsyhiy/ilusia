@@ -1,3 +1,4 @@
+
 (with-eval-after-load 'dired
   (setq dired-dwim-target t
     dired-kill-when-opening-new-dired-buffer t)
@@ -29,6 +30,7 @@
   (setq dired-omit-files "\\.meta$")
 
   (add-hook 'dired-mode-hook #'dired-omit-mode))
+
 
 
 (provide 'ilusia-module-dired)

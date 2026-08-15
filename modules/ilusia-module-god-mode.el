@@ -1,3 +1,4 @@
+
 (straight-use-package 'god-mode)
 (require 'god-mode)
 
@@ -11,6 +12,7 @@
 (define-key god-local-mode-map (kbd ".") #'repeat)
 (define-key god-local-mode-map (kbd "]") #'forward-paragraph)
 (define-key god-local-mode-map (kbd "[") #'backward-paragraph)
+
 
 
 (provide 'ilusia-module-god-mode)

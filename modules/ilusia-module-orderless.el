@@ -1,3 +1,4 @@
+
 (use-package orderless
   :ensure t
 
@@ -11,6 +12,7 @@
           (variable (styles orderless))))
 
   (setq completion-flex-nospace t))
+
 
 
 (provide 'ilusia-module-orderless)

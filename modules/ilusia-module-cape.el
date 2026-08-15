@@ -1,3 +1,4 @@
+
 (use-package cape
   :ensure t
 
@@ -16,6 +17,7 @@
   (setq cape-dabbrev-ignore-case t)
   (setq cape-dabbrev-check-other-buffers t)
   (setq cape-dabbrev-buffer-lerit 20))
+
 
 
 (provide 'ilusia-module-cape)

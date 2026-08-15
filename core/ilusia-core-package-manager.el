@@ -1,3 +1,4 @@
+
 (defvar bootstrap-version)
 (let ((bootstrap-file
        (expand-file-name
@@ -17,6 +18,7 @@
 (straight-use-package 'use-package)
 
 (setq straight-use-package-by-default t)
+
 
 
 (provide 'ilusia-core-package-manager)

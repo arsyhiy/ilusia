@@ -1,3 +1,4 @@
+
 (use-package vertico
   :ensure t
   :hook
@@ -8,6 +9,7 @@
   (vertico-resize nil)
   (vertico-cycle nil)
   (vertico-preselect 'directory))
+
 
 
 (provide 'ilusia-module-vertico)

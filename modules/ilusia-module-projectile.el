@@ -1,3 +1,4 @@
+
 ;; projectile
 (straight-use-package 'projectile)
 ;; (require 'projectile)
@@ -6,6 +7,7 @@
 
 ;; command map prefix
 (define-key projectile-mode-map (kbd "M-p") 'projectile-command-map)
+
 
 
 (provide 'ilusia-module-projectile)

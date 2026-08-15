@@ -15,5 +15,6 @@
   (corfu-popupinfo-mode t))
 
 
+
 (provide 'ilusia-module-corfu)
 ;;; ilusia-module-corfu.el ends here

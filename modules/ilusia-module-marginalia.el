@@ -1,3 +1,4 @@
+
 (use-package marginalia
   :ensure t
   :hook (after-init . marginalia-mode)
@@ -6,6 +7,7 @@
   (marginalia-align 'right)
   (marginalia-align-offset 8)
   (marginalia-max-relative-age 0))
+
 
 
 (provide 'ilusia-module-marginalia)

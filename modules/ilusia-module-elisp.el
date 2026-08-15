@@ -1,3 +1,4 @@
+
 ;; TODO: переписать конфиг для  emacs lisp
 (defun my-elisp-mode-setup ()
   "Setup for elisp."
@@ -19,6 +20,7 @@
     nil t))
 
 (add-hook 'emacs-lisp-mode-hook #'my-elisp-mode-setup)
+
 
 
 (provide 'ilusia-module-elisp)

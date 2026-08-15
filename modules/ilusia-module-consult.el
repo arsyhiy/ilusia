@@ -1,3 +1,4 @@
+
 (use-package consult
   :ensure t
 
@@ -19,6 +20,7 @@
         consult-async-refresh-delay 0.15
         consult-async-input-throttle 0.2
         consult-async-input-debounce 0.3))
+
 
 
 (provide 'ilusia-module-consult)

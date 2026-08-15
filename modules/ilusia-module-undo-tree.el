@@ -1,3 +1,4 @@
+
 (use-package undo-tree
   :ensure t
   :demand t
@@ -18,6 +19,7 @@
 
   :config
   (global-undo-tree-mode 1))
+
 
 
 (provide 'ilusia-module-undo-tree)

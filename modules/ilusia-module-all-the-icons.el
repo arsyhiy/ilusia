@@ -1,5 +1,7 @@
+
 ;; Symbol library
 (straight-use-package 'all-the-icons)
+
 
 
 (provide 'ilusia-module-all-the-icons)

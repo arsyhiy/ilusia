@@ -1,3 +1,4 @@
+
 (use-package flymake
   :ensure nil
   :hook
@@ -9,6 +10,8 @@
    '((error   "✘" flymake-error)
      (warning "▲" flymake-warning)
      (note    "●" flymake-note))))
+
+
 
 
 (provide 'ilusia-module-flymake)
