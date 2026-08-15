@@ -2,3 +2,9 @@
 #+FILETAGS: :emacs:
 
 this is a fork not the original mirage repository!!! 
+
+
+* about this repository in many details
+** what was the goal ?
+the first thing i  wanted to solve was to shrink my personal configuration and put
+"universal" or like "every one use something like this" part in one small framework (i hope it is)
