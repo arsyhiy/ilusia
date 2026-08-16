@@ -6,8 +6,9 @@
 
 ;;; Code:
 
-(straight-use-package 'dashboard)
-;; (require 'dashboard)
+(use-package dashboard
+  :straight t 
+  )
 
 (dashboard-setup-startup-hook)
 

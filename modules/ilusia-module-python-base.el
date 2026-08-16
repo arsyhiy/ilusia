@@ -1,6 +1,6 @@
 
 (use-package python
-  :ensure nil
+  :straight nil
   :mode ("\\.py\\'" . python-ts-mode))
 
 

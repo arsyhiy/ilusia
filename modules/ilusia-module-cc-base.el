@@ -1,5 +1,5 @@
 (use-package c-ts-mode
-  :ensure nil
+  :straight nil
 
   :mode
   ("\\.c\\'"   . c-ts-mode)

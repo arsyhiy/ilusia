@@ -34,7 +34,8 @@ this project is using straight
 
 (straight-use-package 'use-package)
 
-(setq straight-use-package-by-default t)
+;; NOTE: i decided to make like that because for some reason straight tried to download what have :ensurel in it
+;; (setq straight-use-package-by-default t)
 
 #+end_src
 * Config management
@@ -381,7 +382,7 @@ all functionality for vs
 
 (ilusia-module 'cc-base)
 ;; (ilusia-module 'css-base)
-(ilusia-module 'elisp)
+(ilusia-module 'elisp-base)
 (ilusia-module 'html)
 (ilusia-module 'js)
 (ilusia-module 'markdown)
@@ -420,7 +421,7 @@ all functionality for vs
 *** electric pair
 #+begin_src emacs-lisp
 (use-package elec-pair
-  :ensure nil
+  :straight nil
   :custom
   (electric-pair-pairs
    '((?\( . ?\))
@@ -481,8 +482,10 @@ TODO: к всем модулям. довести каждый модуль до 
 
 #+begin_src emacs-lisp
 
-(straight-use-package 'magit)
-;; (require 'magit)
+
+(use-package magit
+  :straight t
+  )
 
 (global-set-key (kbd "C-x g") #'magit-status)
 
@@ -494,7 +497,7 @@ TODO: к всем модулям. довести каждый модуль до 
 
 #+begin_src emacs-lisp
 (use-package smerge-mode
-  :ensure nil
+  :straight nil
   :defer t
   :bind (:map smerge-mode-map
           ("C-c ^ u" . smerge-keep-upper)
@@ -513,7 +516,7 @@ TODO: к всем модулям. довести каждый модуль до 
 
 ;; evil
 (use-package evil
-  :ensure t
+  :straight t
   :hook
   (after-init . evil-mode)
   :init
@@ -608,17 +611,20 @@ TODO: к всем модулям. довести каждый модуль до 
 
 
 (use-package evil-collection
+  :straight t
   :custom
   (evil-collection-want-find-usages-bindings t)
   :hook
   (evil-mode . evil-collection-init))
 
 (use-package evil-surround
+  :straight t
   :after evil-collection
   :config
   (global-evil-surround-mode 1))
 
 (use-package evil-matchit
+  :straight t
   :after evil-collection
   :config
   (global-evil-matchit-mode 1))
@@ -634,6 +640,7 @@ TODO: к всем модулям. довести каждый модуль до 
 
 ;; doom-modeline
 (use-package which-key
+  :straight t
   :hook
   (after-init . which-key-mode))
 
@@ -647,7 +654,7 @@ TODO: к всем модулям. довести каждый модуль до 
 #+begin_src emacs-lisp
 
 (use-package undo-tree
-  :ensure t
+  :straight t
   :demand t
 
   :hook
@@ -676,7 +683,7 @@ TODO: к всем модулям. довести каждый модуль до 
 #+begin_src emacs-lisp
 
 (use-package yasnippet
-  :ensure t
+  :straight t
   :config
   (yas-global-mode 1))
 
@@ -689,8 +696,10 @@ TODO: к всем модулям. довести каждый модуль до 
 
 #+begin_src emacs-lisp
 
-(straight-use-package 'god-mode)
-(require 'god-mode)
+(use-package god-mode
+  :straight t 
+  )
+
 
 ;; god
 (global-set-key (kbd "<escape>") #'god-mode-all)
@@ -720,8 +729,9 @@ TODO: к всем модулям. довести каждый модуль до 
 
 ;;; Code:
 
-(straight-use-package 'dashboard)
-;; (require 'dashboard)
+(use-package dashboard
+  :straight t 
+  )
 
 (dashboard-setup-startup-hook)
 
@@ -739,7 +749,7 @@ TODO:  перписать в том ввиде котором мне понра�
 #+begin_src emacs-lisp
 
 (use-package ef-themes
-   :ensure t 
+  :straight t 
     )
 
 ;; (require 'ef-themes)
@@ -753,8 +763,9 @@ TODO:  перписать в том ввиде котором мне понра�
 
 #+begin_src emacs-lisp
 
-(straight-use-package 'doom-themes)
-;; (require 'doom-themes)
+(use-package doom-themes
+  :straight t 
+  )
 
 #+end_src
 
@@ -765,6 +776,9 @@ TODO:  перписать в том ввиде котором мне понра�
 
 #+begin_src emacs-lisp
 (straight-use-package 'doom-modeline)
+(use-package doom-modeline
+  :straight t
+  )
 #+end_src
 
 *** diff-hl
@@ -776,8 +790,7 @@ TODO:  перписать в том ввиде котором мне понра�
 #+begin_src emacs-lisp
 
 (use-package diff-hl
-  :defer t
-  :ensure t
+  :straight t
   :hook
   (find-file . (lambda ()
                  (global-diff-hl-mode)
@@ -800,7 +813,7 @@ TODO:  перписать в том ввиде котором мне понра�
 #+begin_src emacs-lisp
 
 (use-package hl-todo
-  :ensure t
+  :straight t
  
   :config
   (global-hl-todo-mode 1))
@@ -811,6 +824,8 @@ TODO:  перписать в том ввиде котором мне понра�
 :END:
 #+begin_src emacs-lisp
 (use-package highlight-indent-guides
+
+  :straight t
   :hook (prog-mode . highlight-indent-guides-mode)
   :custom
   (highlight-indent-guides-method 'character))
@@ -822,7 +837,7 @@ TODO:  перписать в том ввиде котором мне понра�
 :END:
 #+begin_src emacs-lisp
 (use-package rainbow-delimiters
-  :ensure t
+  :straight t
 
   :hook
   (prog-mode . rainbow-delimiters-mode)
@@ -837,7 +852,7 @@ TODO:  перписать в том ввиде котором мне понра�
 :END:
 #+begin_src emacs-lisp
 (use-package treesit-auto
-  :ensure t
+  :straight t
   :custom
   (treesit-auto-install t)
   :config
@@ -860,9 +875,10 @@ TODO:  перписать в том ввиде котором мне понра�
 :END:
 
 #+begin_src emacs-lisp
-
-;; Symbol library
 (straight-use-package 'all-the-icons)
+(use-package all-the-icons
+  :straight t
+  )
 
 #+end_src
 
@@ -883,9 +899,9 @@ the local machine:
 
 #+begin_src emacs-lisp
 
-;; projectile
-(straight-use-package 'projectile)
-;; (require 'projectile)
+(use-package projectile
+  :straight t
+  )
 
 (projectile-mode)
 
@@ -903,7 +919,7 @@ the local machine:
 #+begin_src emacs-lisp
 
 (use-package consult
-  :ensure t
+  :straight t
 
   :init
   (setq xref-show-xrefs-function #'consult-xref
@@ -934,7 +950,7 @@ the local machine:
 #+begin_src emacs-lisp
 
 (use-package marginalia
-  :ensure t
+  :straight t
   :hook (after-init . marginalia-mode)
 
   :custom
@@ -951,7 +967,7 @@ the local machine:
 #+begin_src emacs-lisp
 
 (use-package vertico
-  :ensure t
+  :straight t
   :hook
   (after-init . vertico-mode)
 
@@ -1011,7 +1027,7 @@ the local machine:
 #+begin_src emacs-lisp
 
 (use-package orderless
-  :ensure t
+  :straight t
 
   :init
   (setq completion-styles '(orderless basic)
@@ -1033,7 +1049,7 @@ the local machine:
 #+begin_src emacs-lisp
 
 (use-package eldoc
-  :ensure nil
+  :straight t
   :config
   (setq eldoc-idle-delay 0.2)
   (setq eldoc-echo-area-use-multiline-p nil)
@@ -1044,7 +1060,7 @@ the local machine:
 
 
 (use-package eldoc-box
-  :ensure t
+  :straight t
   :hook (eldoc-mode . eldoc-box-hover-mode))
 
 
@@ -1058,7 +1074,7 @@ the local machine:
 #+begin_src emacs-lisp
 
 (use-package flymake
-  :ensure nil
+  :straight t
   :hook
   (prog-mode . flymake-mode)
   :custom
@@ -1094,7 +1110,7 @@ the local machine:
 #+begin_src emacs-lisp
 
 (use-package lsp-mode
-  :ensure t
+  :straight t
   :commands lsp-deferred
 
   :init
@@ -1132,6 +1148,7 @@ the local machine:
   (lsp-enable-which-key-integration))
 
 (use-package lsp-ui
+  :straight t
   :after lsp-mode
   :hook (lsp-mode . lsp-ui-mode)
 
@@ -1153,6 +1170,7 @@ the local machine:
   (lsp-ui-peek-enable t))
 
 (use-package lsp-pyright
+  :straight t
   :after lsp-mode
   :custom
   (lsp-pyright-langserver-command "basedpyright"))
@@ -1167,7 +1185,7 @@ the local machine:
 #+begin_src emacs-lisp
 
 (use-package cape
-  :ensure t
+  :straight t
 
   :init
   (add-hook 'completion-at-point-functions #'cape-file)
@@ -1196,7 +1214,7 @@ the local machine:
 
 
 (use-package vterm
-  :ensure t
+  :straight t
   :commands vterm
   :bind
   ("C-c t" . vterm)
@@ -1220,8 +1238,7 @@ the local machine:
 
 #+begin_src emacs-lisp
 (use-package corfu
-  :ensure t
-  :defer t
+  :straight t
   :custom
   (corfu-auto t)
   (corfu-auto-prefix 3)
@@ -1250,7 +1267,7 @@ in fact we just deside what python mode you should use
 #+begin_src emacs-lisp
 
 (use-package python
-  :ensure nil
+  :straight nil
   :mode ("\\.py\\'" . python-ts-mode))
 
 #+end_src
@@ -1270,7 +1287,7 @@ more comfortable for me and people who litle more than just basic
 #+begin_src emacs-lisp
 
 (use-package org
-  :ensure nil ;; org is a built in package 
+  :straight nil
 
   :mode ("\\.org\\'" . org-mode)
   :bind
@@ -1287,7 +1304,7 @@ more comfortable for me and people who litle more than just basic
 
 #+begin_src emacs-lisp
 (use-package c-ts-mode
-  :ensure nil
+  :straight nil
 
   :mode
   ("\\.c\\'"   . c-ts-mode)
@@ -1303,40 +1320,27 @@ more comfortable for me and people who litle more than just basic
 :END:
 
 #+begin_src emacs-lisp
-(use-package css-ts-mode
-  :ensure nil
-  :mode ("\\.css\\'" . css-ts-mode))
+(require 'css-ts-mode)
 
+(use-package css-ts-mode
+  :straight nil
+  :mode ("\\.css\\'" . css-ts-mode))
 #+end_src
 
 *** elisp-mode
 :PROPERTIES:
-:header-args:emacs-lisp+: :tangle ./modules/ilusia-module-elisp.el
+:header-args:emacs-lisp+: :tangle ./modules/ilusia-module-elisp-base.el
 :END:
 
+this is a temporary version but  ilusia will have that for some time
 #+begin_src emacs-lisp
 
-;; TODO: переписать конфиг для  emacs lisp
-(defun my-elisp-mode-setup ()
-  "Setup for elisp."
-  (electric-pair-local-mode 1)
-  (show-paren-local-mode 1)
-  (eldoc-mode 1)
-  (prettify-symbols-mode 1)
+(setq-default lisp-indent-offset 2)
 
-  (setq-local indent-tabs-mode nil
-    lisp-indent-offset 2)
-
-  (local-set-key (kbd "C-c C-e") #'eval-last-sexp)
-  (local-set-key (kbd "C-c C-r") #'eval-region)
-  (local-set-key (kbd "C-c C-b") #'eval-buffer)
-
-  (add-hook 'before-save-hook
-    (lambda ()
-      (indent-region (point-min) (point-max)))
-    nil t))
-
-(add-hook 'emacs-lisp-mode-hook #'my-elisp-mode-setup)
+(with-eval-after-load 'elisp-mode
+  (define-key emacs-lisp-mode-map (kbd "C-c C-e") #'eval-last-sexp)
+  (define-key emacs-lisp-mode-map (kbd "C-c C-r") #'eval-region)
+  (define-key emacs-lisp-mode-map (kbd "C-c C-b") #'eval-buffer))
 
 #+end_src
 
@@ -1347,7 +1351,7 @@ more comfortable for me and people who litle more than just basic
 
 #+begin_src emacs-lisp
 (use-package html-ts-mode
-  :ensure nil
+  :straight nil
   :mode ("\\.html?\\'" . html-ts-mode)
 
   :custom
@@ -1374,6 +1378,8 @@ more comfortable for me and people who litle more than just basic
     treesit-font-lock-level 4))
 
 (use-package js
+
+  :straight nil
   :mode "\\.js\\'"
   :hook
   ((js-ts-mode . my-js-mode-setup)
@@ -1389,8 +1395,7 @@ more comfortable for me and people who litle more than just basic
 
 #+begin_src emacs-lisp
 (use-package markdown-mode
-  :defer t
-  :ensure t
+  :straight nil
   :mode ("README\\.md\\'" . gfm-mode)
   :init (setq markdown-command "multimarkdown"))
 
@@ -1403,6 +1408,8 @@ more comfortable for me and people who litle more than just basic
 
 #+begin_src emacs-lisp
 (use-package typescript-mode
+
+  :straight nil
   :init
   (add-to-list 'major-mode-remap-alist
     '(typescript-mode . typescript-ts-mode))

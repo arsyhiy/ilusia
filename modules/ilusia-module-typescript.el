@@ -1,4 +1,6 @@
 (use-package typescript-mode
+
+  :straight nil
   :init
   (add-to-list 'major-mode-remap-alist
     '(typescript-mode . typescript-ts-mode))

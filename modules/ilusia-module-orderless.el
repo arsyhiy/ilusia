@@ -1,6 +1,6 @@
 
 (use-package orderless
-  :ensure t
+  :straight t
 
   :init
   (setq completion-styles '(orderless basic)

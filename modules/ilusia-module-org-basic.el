@@ -1,6 +1,6 @@
 
 (use-package org
-  :ensure nil ;; org is a built in package 
+  :straight nil
 
   :mode ("\\.org\\'" . org-mode)
   :bind

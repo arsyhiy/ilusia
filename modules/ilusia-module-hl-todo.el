@@ -1,6 +1,6 @@
 
 (use-package hl-todo
-  :ensure t
+  :straight t
  
   :config
   (global-hl-todo-mode 1))

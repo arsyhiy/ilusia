@@ -1,7 +1,7 @@
 
 ;; evil
 (use-package evil
-  :ensure t
+  :straight t
   :hook
   (after-init . evil-mode)
   :init
@@ -96,17 +96,20 @@
 
 
 (use-package evil-collection
+  :straight t
   :custom
   (evil-collection-want-find-usages-bindings t)
   :hook
   (evil-mode . evil-collection-init))
 
 (use-package evil-surround
+  :straight t
   :after evil-collection
   :config
   (global-evil-surround-mode 1))
 
 (use-package evil-matchit
+  :straight t
   :after evil-collection
   :config
   (global-evil-matchit-mode 1))

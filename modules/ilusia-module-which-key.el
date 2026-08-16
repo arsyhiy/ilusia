@@ -1,6 +1,7 @@
 
 ;; doom-modeline
 (use-package which-key
+  :straight t
   :hook
   (after-init . which-key-mode))
 

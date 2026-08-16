@@ -1,6 +1,6 @@
 
 (use-package eldoc
-  :ensure nil
+  :straight t
   :config
   (setq eldoc-idle-delay 0.2)
   (setq eldoc-echo-area-use-multiline-p nil)
@@ -11,7 +11,7 @@
 
 
 (use-package eldoc-box
-  :ensure t
+  :straight t
   :hook (eldoc-mode . eldoc-box-hover-mode))
 
 

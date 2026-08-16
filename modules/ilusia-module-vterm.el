@@ -1,7 +1,7 @@
 
 
 (use-package vterm
-  :ensure t
+  :straight t
   :commands vterm
   :bind
   ("C-c t" . vterm)

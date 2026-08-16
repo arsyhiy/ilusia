@@ -5,6 +5,8 @@
     treesit-font-lock-level 4))
 
 (use-package js
+
+  :straight nil
   :mode "\\.js\\'"
   :hook
   ((js-ts-mode . my-js-mode-setup)

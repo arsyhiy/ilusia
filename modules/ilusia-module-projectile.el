@@ -1,7 +1,7 @@
 
-;; projectile
-(straight-use-package 'projectile)
-;; (require 'projectile)
+(use-package projectile
+  :straight t
+  )
 
 (projectile-mode)
 

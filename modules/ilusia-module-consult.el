@@ -1,6 +1,6 @@
 
 (use-package consult
-  :ensure t
+  :straight t
 
   :init
   (setq xref-show-xrefs-function #'consult-xref

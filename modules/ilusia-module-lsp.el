@@ -1,6 +1,6 @@
 
 (use-package lsp-mode
-  :ensure t
+  :straight t
   :commands lsp-deferred
 
   :init
@@ -38,6 +38,7 @@
   (lsp-enable-which-key-integration))
 
 (use-package lsp-ui
+  :straight t
   :after lsp-mode
   :hook (lsp-mode . lsp-ui-mode)
 
@@ -59,6 +60,7 @@
   (lsp-ui-peek-enable t))
 
 (use-package lsp-pyright
+  :straight t
   :after lsp-mode
   :custom
   (lsp-pyright-langserver-command "basedpyright"))

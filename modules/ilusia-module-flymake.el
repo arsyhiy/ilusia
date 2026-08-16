@@ -1,6 +1,6 @@
 
 (use-package flymake
-  :ensure nil
+  :straight t
   :hook
   (prog-mode . flymake-mode)
   :custom

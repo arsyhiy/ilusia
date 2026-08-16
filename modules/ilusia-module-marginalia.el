@@ -1,6 +1,6 @@
 
 (use-package marginalia
-  :ensure t
+  :straight t
   :hook (after-init . marginalia-mode)
 
   :custom

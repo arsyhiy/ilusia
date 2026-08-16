@@ -1,6 +1,6 @@
 
 (use-package ef-themes
-   :ensure t 
+  :straight t 
     )
 
 ;; (require 'ef-themes)

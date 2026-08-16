@@ -1,6 +1,8 @@
 
-(straight-use-package 'god-mode)
-(require 'god-mode)
+(use-package god-mode
+  :straight t 
+  )
+
 
 ;; god
 (global-set-key (kbd "<escape>") #'god-mode-all)

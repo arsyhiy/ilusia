@@ -1,6 +1,7 @@
-
-;; Symbol library
 (straight-use-package 'all-the-icons)
+(use-package all-the-icons
+  :straight t
+  )
 
 
 

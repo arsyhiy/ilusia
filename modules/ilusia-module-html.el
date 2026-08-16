@@ -1,5 +1,5 @@
 (use-package html-ts-mode
-  :ensure nil
+  :straight nil
   :mode ("\\.html?\\'" . html-ts-mode)
 
   :custom

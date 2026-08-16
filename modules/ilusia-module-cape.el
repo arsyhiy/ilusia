@@ -1,6 +1,6 @@
 
 (use-package cape
-  :ensure t
+  :straight t
 
   :init
   (add-hook 'completion-at-point-functions #'cape-file)

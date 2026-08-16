@@ -1,6 +1,5 @@
 (use-package corfu
-  :ensure t
-  :defer t
+  :straight t
   :custom
   (corfu-auto t)
   (corfu-auto-prefix 3)

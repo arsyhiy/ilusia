@@ -1,5 +1,5 @@
 (use-package smerge-mode
-  :ensure nil
+  :straight nil
   :defer t
   :bind (:map smerge-mode-map
           ("C-c ^ u" . smerge-keep-upper)

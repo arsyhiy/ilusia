@@ -1,5 +1,5 @@
 (use-package treesit-auto
-  :ensure t
+  :straight t
   :custom
   (treesit-auto-install t)
   :config

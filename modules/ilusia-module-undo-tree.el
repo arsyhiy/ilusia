@@ -1,6 +1,6 @@
 
 (use-package undo-tree
-  :ensure t
+  :straight t
   :demand t
 
   :hook

@@ -1,6 +1,8 @@
 
-(straight-use-package 'magit)
-;; (require 'magit)
+
+(use-package magit
+  :straight t
+  )
 
 (global-set-key (kbd "C-x g") #'magit-status)
 

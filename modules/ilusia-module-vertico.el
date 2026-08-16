@@ -1,6 +1,6 @@
 
 (use-package vertico
-  :ensure t
+  :straight t
   :hook
   (after-init . vertico-mode)
 

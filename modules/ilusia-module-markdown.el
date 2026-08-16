@@ -1,6 +1,5 @@
 (use-package markdown-mode
-  :defer t
-  :ensure t
+  :straight nil
   :mode ("README\\.md\\'" . gfm-mode)
   :init (setq markdown-command "multimarkdown"))
 

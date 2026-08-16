@@ -1,5 +1,5 @@
 (use-package elec-pair
-  :ensure nil
+  :straight nil
   :custom
   (electric-pair-pairs
    '((?\( . ?\))
