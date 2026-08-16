@@ -7,7 +7,7 @@
 (ilusia-module 'corfu)
 
 
-(ilusia-module 'cc)
+(ilusia-module 'cc-base)
 (ilusia-module 'css)
 (ilusia-module 'elisp)
 (ilusia-module 'html)

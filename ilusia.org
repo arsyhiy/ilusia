@@ -379,7 +379,7 @@ all functionality for vs
 (ilusia-module 'corfu)
 
 
-(ilusia-module 'cc)
+(ilusia-module 'cc-base)
 (ilusia-module 'css)
 (ilusia-module 'elisp)
 (ilusia-module 'html)
@@ -1269,54 +1269,20 @@ more comfortable for me and people who litle more than just basic
 
 #+end_src
 
-*** cc-mode
+**** cc-mode
 :PROPERTIES:
-:header-args:emacs-lisp+: :tangle ./modules/ilusia-module-cc.el
+:header-args:emacs-lisp+: :tangle ./modules/ilusia-module-cc-base.el
 :END:
 
 #+begin_src emacs-lisp
 (use-package c-ts-mode
   :ensure nil
+
   :mode
-  ("\\.c\\'" . c-ts-mode)
-  ("\\.h\\'" . c-or-c++-ts-mode)
+  ("\\.c\\'"   . c-ts-mode)
+  ("\\.h\\'"   . c-or-c++-ts-mode)
   ("\\.cpp\\'" . c++-ts-mode)
-  ("\\.hpp\\'" . c++-ts-mode)
-
-  :bind
-  (:map c-ts-mode-map
-    ("<f1>" . my-c/make-clean)
-    ("<f2>" . my-c/make-all)
-    ("<f3>" . my-c/make-run))
-
-  :config
-
-  (c-ts-indent-offset 4)
-  (c-ts-mode-indent-style 'linux)
-
-  (c-ts-mode-enable-doxygen t)
-
-  (eletric-pair-mode 1))
-
-(defun my-c/make-clean ()
-  "Run make clean in project root."
-  (interactive)
-  (let ((default-directory (projectile-project-root)))
-    (compile "make clean")))
-
-(defun my-c/make-all ()
-  "Run make all in project root."
-  (interactive)
-  (let ((default-directory (projectile-project-root)))
-    (compile "make all")))
-
-(defun my-c/make-run ()
-  "Run make run in project root."
-  (interactive)
-  (let ((default-directory (projectile-project-root)))
-    (compile "make run")))
-
-;; todo: add make-custom with arguments memory.
+  ("\\.hpp\\'" . c++-ts-mode))
 
 #+end_src
 
