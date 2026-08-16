@@ -417,7 +417,18 @@ all functionality for vs
 :header-args:emacs-lisp+: :tangle ./layers/ilusia-layer-Editing.el
 :END:
 
+*** electric pair
 #+begin_src emacs-lisp
+(use-package elec-pair
+  :ensure nil
+  :custom
+  (electric-pair-pairs
+   '((?\( . ?\))
+     (?\[ . ?\])
+     (?\{ . ?\)))
+  :config
+  (electric-pair-mode 1))
+
 #+end_src
 ** Navigation
 :PROPERTIES:
