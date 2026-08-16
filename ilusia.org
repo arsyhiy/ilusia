@@ -386,7 +386,7 @@ all functionality for vs
 (ilusia-module 'js)
 (ilusia-module 'markdown)
 (ilusia-module 'org-basic)
-(ilusia-module 'python)
+(ilusia-module 'python-base)
 (ilusia-module 'typescript)
 
 
@@ -1227,6 +1227,48 @@ the local machine:
 #+end_src
 
 ** languages
+*** base configuration
+the main purpose of base configuration for langauges is decided what mode you should use and some good options from box
+**** python-mode
+:PROPERTIES:
+:header-args:emacs-lisp+: :tangle ./modules/ilusia-module-python-base.el
+:END:
+
+in fact we just deside what python mode you should use
+
+#+begin_src emacs-lisp
+
+(use-package python
+  :ensure nil
+  :mode ("\\.py\\'" . python-ts-mode))
+
+#+end_src
+
+**** org-mode
+:PROPERTIES:
+:header-args:emacs-lisp+: :tangle ./modules/ilusia-module-org-basic.el
+:END:
+ilusia have a very basic config for org mode because every one has very personal
+config for them self, so why even try to?
+
+NOTE: maybe add some settings for beginers only purpose.
+
+in fact i very recomend you to make own use-package org, this one i'll try to make
+more comfortable for me and people who litle more than just basic 
+
+#+begin_src emacs-lisp
+
+(use-package org
+  :ensure nil ;; org is a built in package 
+
+  :mode ("\\.org\\'" . org-mode)
+  :bind
+   (("\C-ca" . org-agenda))
+  :custom
+  (org-startup-folded 'overview))
+
+#+end_src
+
 *** cc-mode
 :PROPERTIES:
 :header-args:emacs-lisp+: :tangle ./modules/ilusia-module-cc.el
@@ -1383,44 +1425,6 @@ the local machine:
   :ensure t
   :mode ("README\\.md\\'" . gfm-mode)
   :init (setq markdown-command "multimarkdown"))
-
-#+end_src
-
-*** org-mode
-:PROPERTIES:
-:header-args:emacs-lisp+: :tangle ./modules/ilusia-module-org-basic.el
-:END:
-ilusia have a very basic config for org mode because every one has very personal
-config for them self, so why even try to?
-
-NOTE: maybe add some settings for beginers only purpose.
-
-in fact i very recomend you to make own use-package org, this one i'll try to make
-more comfortable for me and people who litle more than just basic 
-
-#+begin_src emacs-lisp
-
-(use-package org
-  :ensure nil ;; org is a built in package 
-
-  :mode ("\\.org\\'" . org-mode)
-  :bind
-   (("\C-ca" . org-agenda))
-  :custom
-  (org-startup-folded 'overview))
-
-#+end_src
-
-*** python-mode
-:PROPERTIES:
-:header-args:emacs-lisp+: :tangle ./modules/ilusia-module-python.el
-:END:
-
-#+begin_src emacs-lisp
-(use-package python
-  :ensure nil
-  :mode ("\\.py\\'" . python-ts-mode)
-  :hook ((python-ts-mode . lsp-deferred)))
 
 #+end_src
 

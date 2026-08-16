@@ -14,7 +14,7 @@
 (ilusia-module 'js)
 (ilusia-module 'markdown)
 (ilusia-module 'org-basic)
-(ilusia-module 'python)
+(ilusia-module 'python-base)
 (ilusia-module 'typescript)
 
 
