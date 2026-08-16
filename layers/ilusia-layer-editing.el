@@ -6,9 +6,9 @@
      (?\[ . ?\])
      (?\{ . ?\)))
   :config
-  (electric-pair-mode 1))
+  (electric-pair-mode 1)))
 
 
 
-(provide 'ilusia-layer-Editing)
-;;; ilusia-layer-Editing.el ends here
+(provide 'ilusia-layer-editing)
+;;; ilusia-layer-editing.el ends here

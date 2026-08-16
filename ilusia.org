@@ -380,7 +380,7 @@ all functionality for vs
 
 
 (ilusia-module 'cc-base)
-(ilusia-module 'css)
+;; (ilusia-module 'css-base)
 (ilusia-module 'elisp)
 (ilusia-module 'html)
 (ilusia-module 'js)
@@ -414,7 +414,7 @@ all functionality for vs
 
 ** Editing
 :PROPERTIES:
-:header-args:emacs-lisp+: :tangle ./layers/ilusia-layer-Editing.el
+:header-args:emacs-lisp+: :tangle ./layers/ilusia-layer-editing.el
 :END:
 
 *** electric pair
@@ -427,7 +427,7 @@ all functionality for vs
      (?\[ . ?\])
      (?\{ . ?\)))
   :config
-  (electric-pair-mode 1))
+  (electric-pair-mode 1)))
 
 #+end_src
 ** Navigation
@@ -1297,24 +1297,15 @@ more comfortable for me and people who litle more than just basic
 
 #+end_src
 
-*** css-mode
+**** css-mode
 :PROPERTIES:
-:header-args:emacs-lisp+: :tangle ./modules/ilusia-module-css.el
+:header-args:emacs-lisp+: :tangle ./modules/ilusia-module-css-base.el
 :END:
 
 #+begin_src emacs-lisp
 (use-package css-ts-mode
-  :straight nil
   :ensure nil
-  :mode "\\.css\\'"
-  :hook
-  (css-ts-mode . electric-pair-local-mode)
-  (css-ts-mode . (lambda ()
-                   (setq-local tab-width 2
-                     css-indent-offset 2)))
-  :config
-  (add-to-list 'major-mode-remap-alist
-    '(css-mode . css-ts-mode)))
+  :mode ("\\.css\\'" . css-ts-mode))
 
 #+end_src
 
