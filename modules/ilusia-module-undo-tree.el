@@ -1,14 +1,11 @@
 (use-package undo-tree
   :straight t
-  :demand t
-
-  :hook
-  (prog-mode . undo-tree-mode)
 
   :custom
   (undo-tree-auto-save-history t)
   (undo-tree-visualizer-timestamps t)
   (undo-tree-visualizer-diff t)
+
   (undo-tree-history-directory-alist
    `(("." . ,(expand-file-name "undo" user-emacs-directory))))
 

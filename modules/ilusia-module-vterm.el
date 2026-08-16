@@ -6,10 +6,11 @@
 
   :custom
   (vterm-max-scrollback 10000)
-  (vterm-shell "/bin/zsh")
+  ;; (vterm-shell "/bin/zsh");; TODO: make a functionalatty that memorise shell to use in future and maybe get to know what shell the system has
+  (vterm-shell "/bin/bash");; because we can't know what shell user use, use that 100% people will have in linux
 
   :config
-  ;; Закрывать буфер после завершения процесса
+  ;; close buffer if the terminal process is killed
   (add-hook 'vterm-exit-functions
             (lambda (_buffer _event)
               (kill-buffer))))

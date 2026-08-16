@@ -1,6 +1,5 @@
 (use-package c-ts-mode
   :straight nil
-
   :mode
   ("\\.c\\'"   . c-ts-mode)
   ("\\.h\\'"   . c-or-c++-ts-mode)

@@ -1,3 +1,4 @@
+;; NOTE: make universal not personal
 ;; evil
 (use-package evil
   :straight t
@@ -89,7 +90,7 @@
 
   
    (evil-mode 1))
-;; (require 'evil)
+
 ;; bindings
 (global-set-key (kbd "C-<escape>") #'evil-mode)
 

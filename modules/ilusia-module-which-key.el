@@ -1,4 +1,3 @@
-;; doom-modeline
 (use-package which-key
   :straight t
   :hook

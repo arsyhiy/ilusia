@@ -1,4 +1,4 @@
-(ilusia-module 'emacs-dashboard)
+(ilusia-module 'dashboard)
 
 (setq dashboard-center-content t)
 (setq dashboard-set-file-icons t)

@@ -1,7 +1,6 @@
 ;; icons
 (ilusia-module 'all-the-icons)
 
-;;TODO: сюда нунжо засунуть то что как либо изменяет или влияет на текст 
 (ilusia-module 'hl-todo)
 (ilusia-module 'highlight-indent-guides)
 (ilusia-module 'highlight-rainbow-delimiters)
@@ -14,7 +13,6 @@
 ;; ;; line numbers
 ;; (global-set-key (kbd "C-c l") #'display-line-numbers-mode)
 
-;; TODO: написать этот как умнея в конфиге
 ;; size
 (add-to-list 'default-frame-alist '(height . 50))
 (add-to-list 'default-frame-alist '(width  . 70))
@@ -43,7 +41,6 @@
 ;; ;; split threshold
 ;; (setq split-width-threshold 70)
 
-;; TODO: решить как будить работать bell либо звук либо визуально а то и просто отключить
 ;; visible bell
 (setq visible-bell t)
 

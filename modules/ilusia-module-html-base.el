@@ -1,8 +1,6 @@
 (use-package html-ts-mode
   :straight nil
-  :mode ("\\.html?\\'" . html-ts-mode)
-
-  )
+  :mode ("\\.html?\\'" . html-ts-mode))
 
 
 (provide 'ilusia-module-html-base)

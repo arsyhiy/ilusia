@@ -1,10 +1,6 @@
 (use-package js
   :straight nil
-  :mode ("\\.js\\'" . js-ts-mode)
-  :custom
-  (js-indent-level 2)
-  (tab-width 2)
-  (treesit-font-lock-level 4))
+  :mode ("\\.js\\'" . js-ts-mode))
 
 
 (provide 'ilusia-module-js-base)
