@@ -1,4 +1,3 @@
-
 ;; evil
 (use-package evil
   :straight t
@@ -113,7 +112,6 @@
   :after evil-collection
   :config
   (global-evil-matchit-mode 1))
-
 
 
 (provide 'ilusia-module-evil)

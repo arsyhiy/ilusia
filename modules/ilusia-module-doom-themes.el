@@ -1,8 +1,6 @@
-
 (use-package doom-themes
   :straight t 
   )
-
 
 
 (provide 'ilusia-module-doom-themes)

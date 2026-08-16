@@ -8,6 +8,5 @@
   ("\\.hpp\\'" . c++-ts-mode))
 
 
-
 (provide 'ilusia-module-cc-base)
 ;;; ilusia-module-cc-base.el ends here

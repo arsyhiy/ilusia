@@ -1,4 +1,3 @@
-
 (use-package lsp-mode
   :straight t
   :commands lsp-deferred
@@ -64,8 +63,6 @@
   :after lsp-mode
   :custom
   (lsp-pyright-langserver-command "basedpyright"))
-
-
 
 
 (provide 'ilusia-module-lsp)

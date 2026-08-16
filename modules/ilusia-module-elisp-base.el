@@ -1,11 +1,13 @@
+(use-package emacs-lisp-mode
+  :straight nil
+  :custom
+  (lisp-indent-offset 2)
 
-(setq-default lisp-indent-offset 2)
-
-(with-eval-after-load 'elisp-mode
-  (define-key emacs-lisp-mode-map (kbd "C-c C-e") #'eval-last-sexp)
-  (define-key emacs-lisp-mode-map (kbd "C-c C-r") #'eval-region)
-  (define-key emacs-lisp-mode-map (kbd "C-c C-b") #'eval-buffer))
-
+  :bind
+  (:map emacs-lisp-mode-map
+        ("C-c C-e" . eval-last-sexp)
+        ("C-c C-r" . eval-region)
+        ("C-c C-b" . eval-buffer)))
 
 
 (provide 'ilusia-module-elisp-base)

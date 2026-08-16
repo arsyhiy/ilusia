@@ -1,4 +1,3 @@
-
 (ilusia-module 'emacs-dashboard)
 
 (setq dashboard-center-content t)
@@ -10,7 +9,6 @@
         (bookmarks . 5)
         (registers . 5)
         (agenda    . 5)))
-
 
 
 (provide 'ilusia-layer-dashboard)

@@ -1,4 +1,3 @@
-
 ;;; ilusia-emacs-dashboard.el --- Dashboard module -*- lexical-binding: t; -*-
 
 ;;; Commentary:
@@ -14,7 +13,6 @@
 
 (provide 'ilusia-module-emacs-dashboard)
 ;;; ilusia-emacs-dashboard.el ends here
-
 
 
 (provide 'ilusia-module-emacs-dashboard)

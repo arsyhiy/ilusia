@@ -1,5 +1,4 @@
 (use-package typescript-mode
-
   :straight nil
   :init
   (add-to-list 'major-mode-remap-alist
@@ -8,6 +7,5 @@
     '(js-mode . js-ts-mode)))
 
 
-
-(provide 'ilusia-module-typescript)
-;;; ilusia-module-typescript.el ends here
+(provide 'ilusia-module-typescript-base)
+;;; ilusia-module-typescript-base.el ends here

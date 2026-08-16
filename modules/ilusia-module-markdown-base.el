@@ -4,6 +4,5 @@
   :init (setq markdown-command "multimarkdown"))
 
 
-
-(provide 'ilusia-module-markdown)
-;;; ilusia-module-markdown.el ends here
+(provide 'ilusia-module-markdown-base)
+;;; ilusia-module-markdown-base.el ends here

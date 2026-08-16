@@ -1,4 +1,3 @@
-
 (defun ilusia/modeline-set-colors (fg fg-in bg bg-in)
   "Set the color of the mode and header lines and blend the 
 `doom-modeline-bar' with the background."
@@ -25,7 +24,6 @@
 ;; reload active theme
 (let ((active-theme (car custom-enabled-themes)))
   (if active-theme (enable-theme active-theme)))
-
 
 
 (provide 'ilusia-extension-theme-modeline)

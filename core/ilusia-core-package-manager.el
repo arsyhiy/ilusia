@@ -1,4 +1,3 @@
-
 (defvar bootstrap-version)
 (let ((bootstrap-file
        (expand-file-name
@@ -19,7 +18,6 @@
 
 ;; NOTE: i decided to make like that because for some reason straight tried to download what have :ensurel in it
 ;; (setq straight-use-package-by-default t)
-
 
 
 (provide 'ilusia-core-package-manager)

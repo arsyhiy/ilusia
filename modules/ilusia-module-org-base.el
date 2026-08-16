@@ -1,4 +1,3 @@
-
 (use-package org
   :straight nil
 
@@ -9,6 +8,5 @@
   (org-startup-folded 'overview))
 
 
-
-(provide 'ilusia-module-org-basic)
-;;; ilusia-module-org-basic.el ends here
+(provide 'ilusia-module-org-base)
+;;; ilusia-module-org-base.el ends here

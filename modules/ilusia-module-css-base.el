@@ -1,7 +1,5 @@
-(require 'css-ts-mode)
-
 (use-package css-ts-mode
-  :straight nil
+  :ensure nil
   :mode ("\\.css\\'" . css-ts-mode))
 
 

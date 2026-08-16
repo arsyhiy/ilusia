@@ -1,5 +1,3 @@
-
-
 (use-package vterm
   :straight t
   :commands vterm
@@ -15,7 +13,6 @@
   (add-hook 'vterm-exit-functions
             (lambda (_buffer _event)
               (kill-buffer))))
-
 
 
 (provide 'ilusia-module-vterm)

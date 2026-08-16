@@ -1,4 +1,3 @@
-
 (defun ilusia-load-component (type component)
   "Load Ilusia COMPONENT of TYPE."
   (require
@@ -19,8 +18,6 @@
   "Load an Ilusia EXTENSION by name."
   (ilusia-load-component "extension" extension))
 
-
-
 (defconst ilusia--config-files
   '("ilusia.org" "config.org")
   "Org files used as Ilusia configuration sources.")
@@ -35,8 +32,6 @@
       (expand-file-name file ilusia-directory)
     (expand-file-name file user-emacs-directory)))
 
-
-
 (defun ilusia--clean-generated ()
   "Remove generated Ilusia component files."
   (dolist (directory ilusia--component-directories)
@@ -50,8 +45,6 @@
                   "\\`ilusia-.*\\.el\\'"))
           (when (file-regular-p file)
             (delete-file file)))))))
-
-
 
 (defun ilusia--add-provide (file)
   "Add a `provide' form to generated FILE."
@@ -86,8 +79,6 @@
           (when (file-regular-p file)
             (ilusia--add-provide file)))))))
 
-
-
 (defun ilusia--tangle ()
   "Tangle Ilusia and user configuration."
   (let ((org-confirm-babel-evaluate nil))
@@ -95,8 +86,6 @@
       (let ((file (ilusia--config-file file)))
         (when (file-exists-p file)
           (org-babel-tangle-file file))))))
-
-
 
 (defun ilusia-sync (&optional quiet)
   "Synchronize generated configuration with Ilusia source files."
@@ -122,11 +111,8 @@
          (current-time)
          start-time))))))
 
-
-
 (straight-use-package 'no-littering)
 (require 'no-littering)
-
 
 
 (provide 'ilusia-core-config-management)

@@ -381,14 +381,14 @@ all functionality for vs
 
 
 (ilusia-module 'cc-base)
-;; (ilusia-module 'css-base)
+(ilusia-module 'css-base)
 (ilusia-module 'elisp-base)
-(ilusia-module 'html)
-(ilusia-module 'js)
-(ilusia-module 'markdown)
-(ilusia-module 'org-basic)
+(ilusia-module 'html-base)
+(ilusia-module 'js-base)
+(ilusia-module 'markdown-base)
+(ilusia-module 'org-base)
 (ilusia-module 'python-base)
-(ilusia-module 'typescript)
+(ilusia-module 'typescript-base)
 
 
 #+end_src
@@ -1274,7 +1274,7 @@ in fact we just deside what python mode you should use
 
 **** org-mode
 :PROPERTIES:
-:header-args:emacs-lisp+: :tangle ./modules/ilusia-module-org-basic.el
+:header-args:emacs-lisp+: :tangle ./modules/ilusia-module-org-base.el
 :END:
 ilusia have a very basic config for org mode because every one has very personal
 config for them self, so why even try to?
@@ -1288,10 +1288,7 @@ more comfortable for me and people who litle more than just basic
 
 (use-package org
   :straight nil
-
   :mode ("\\.org\\'" . org-mode)
-  :bind
-   (("\C-ca" . org-agenda))
   :custom
   (org-startup-folded 'overview))
 
@@ -1303,9 +1300,9 @@ more comfortable for me and people who litle more than just basic
 :END:
 
 #+begin_src emacs-lisp
+
 (use-package c-ts-mode
   :straight nil
-
   :mode
   ("\\.c\\'"   . c-ts-mode)
   ("\\.h\\'"   . c-or-c++-ts-mode)
@@ -1320,80 +1317,58 @@ more comfortable for me and people who litle more than just basic
 :END:
 
 #+begin_src emacs-lisp
-(require 'css-ts-mode)
 
 (use-package css-ts-mode
-  :straight nil
+  :ensure nil
   :mode ("\\.css\\'" . css-ts-mode))
+
 #+end_src
 
-*** elisp-mode
+**** elisp-mode
 :PROPERTIES:
 :header-args:emacs-lisp+: :tangle ./modules/ilusia-module-elisp-base.el
 :END:
 
-this is a temporary version but  ilusia will have that for some time
 #+begin_src emacs-lisp
 
-(setq-default lisp-indent-offset 2)
-
-(with-eval-after-load 'elisp-mode
-  (define-key emacs-lisp-mode-map (kbd "C-c C-e") #'eval-last-sexp)
-  (define-key emacs-lisp-mode-map (kbd "C-c C-r") #'eval-region)
-  (define-key emacs-lisp-mode-map (kbd "C-c C-b") #'eval-buffer))
-
+(use-package emacs-lisp-mode
+  :straight nil
+  :mode ("\\.el\\'" . emacs-lisp-mode)))
 #+end_src
 
-*** html-mode
+**** html-mode
 :PROPERTIES:
-:header-args:emacs-lisp+: :tangle ./modules/ilusia-module-html.el
+:header-args:emacs-lisp+: :tangle ./modules/ilusia-module-html-base.el
 :END:
 
 #+begin_src emacs-lisp
+
 (use-package html-ts-mode
   :straight nil
-  :mode ("\\.html?\\'" . html-ts-mode)
-
-  :custom
-  (sgml-basic-offset 2)
-
-  :hook
-  (html-ts-mode . (lambda ()
-                    (setq-local tab-width 2)
-                    (electric-pair-local-mode 1)
-                    (display-line-numbers-mode 1))))
+  :mode ("\\.html?\\'" . html-ts-mode))
 
 #+end_src
 
-*** js-mode
+**** js-mode
 :PROPERTIES:
-:header-args:emacs-lisp+: :tangle ./modules/ilusia-module-js.el
+:header-args:emacs-lisp+: :tangle ./modules/ilusia-module-js-base.el
 :END:
 
 #+begin_src emacs-lisp
-(defun my-js-mode-setup ()
-  "Setq-local vars for 'js-mode'."
-  (setq-local js-indent-level 2
-    tab-width 2
-    treesit-font-lock-level 4))
 
 (use-package js
-
   :straight nil
-  :mode "\\.js\\'"
-  :hook
-  ((js-ts-mode . my-js-mode-setup)
-    (js-ts-mode . electric-pair-local-mode))
-  )
+  :mode ("\\.js\\'" . js-ts-mode))
 
 #+end_src
 
-*** markdown-mode
+**** markdown-mode
 :PROPERTIES:
-:header-args:emacs-lisp+: :tangle ./modules/ilusia-module-markdown.el
+:header-args:emacs-lisp+: :tangle ./modules/ilusia-module-markdown-base.el
 :END:
 
 #+begin_src emacs-lisp
+
 (use-package markdown-mode
   :straight nil
   :mode ("README\\.md\\'" . gfm-mode)
@@ -1401,14 +1376,14 @@ this is a temporary version but  ilusia will have that for some time
 
 #+end_src
 
-*** typescript-mode
+**** typescript-mode
 :PROPERTIES:
-:header-args:emacs-lisp+: :tangle ./modules/ilusia-module-typescript.el
+:header-args:emacs-lisp+: :tangle ./modules/ilusia-module-typescript-base.el
 :END:
 
 #+begin_src emacs-lisp
-(use-package typescript-mode
 
+(use-package typescript-mode
   :straight nil
   :init
   (add-to-list 'major-mode-remap-alist

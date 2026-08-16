@@ -1,4 +1,3 @@
-
 (use-package eldoc
   :straight t
   :config
@@ -13,8 +12,6 @@
 (use-package eldoc-box
   :straight t
   :hook (eldoc-mode . eldoc-box-hover-mode))
-
-
 
 
 (provide 'ilusia-module-eldoc)
