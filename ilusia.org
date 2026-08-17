@@ -915,12 +915,13 @@ i think ilusia has a reasonable settings for corfu
 
 #+begin_src emacs-lisp
 
+;;TODO: design how diagnostic all alike thing work 
 (use-package flymake
-  :straight t
+  :straight nil
 
   :custom
   (flymake-no-changes-timeout 0.5)
-  (flymake-show-diagnostics-at-end-of-line t)
+  (flymake-show-diagnostics-at-end-of-line nil)
   (flymake-margin-indicators-string
    '((error   "✘" flymake-error)
      (warning "▲" flymake-warning)
@@ -986,7 +987,7 @@ i think ilusia has a reasonable settings for corfu
   (lsp-ui-doc-position 'at-point)
   (lsp-ui-doc-max-width 80)
   (lsp-ui-doc-max-height 20)
-  (lsp-ui-doc-show-with-cursor t)
+  (lsp-ui-doc-show-with-cursor nil)
   (lsp-ui-doc-show-with-mouse nil)
   (lsp-ui-doc-use-childframe t)
 

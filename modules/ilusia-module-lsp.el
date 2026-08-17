@@ -48,7 +48,7 @@
   (lsp-ui-doc-position 'at-point)
   (lsp-ui-doc-max-width 80)
   (lsp-ui-doc-max-height 20)
-  (lsp-ui-doc-show-with-cursor t)
+  (lsp-ui-doc-show-with-cursor nil)
   (lsp-ui-doc-show-with-mouse nil)
   (lsp-ui-doc-use-childframe t)
 
