@@ -1,7 +1,6 @@
 (use-package flymake
   :straight t
-  :hook
-  (prog-mode . flymake-mode)
+
   :custom
   (flymake-no-changes-timeout 0.5)
   (flymake-show-diagnostics-at-end-of-line t)
