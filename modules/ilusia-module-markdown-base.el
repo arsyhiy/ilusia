@@ -1,6 +1,10 @@
 (use-package markdown-mode
   :straight nil
-  :mode ("README\\.md\\'" . gfm-mode)
+  :mode ("README\\.md\\'" . gfm-mode);; github flavored markdown
+  :hook 
+  (markdown-mode . auto-fill-mode)
+  :custom
+  (fill-column 80)
   :init (setq markdown-command "multimarkdown"))
 
 

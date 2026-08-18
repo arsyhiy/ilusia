@@ -1244,14 +1244,34 @@ NOTE: maybe add some settings for beginers only purpose.
 
 in fact i very recomend you to make own use-package org, this one i'll try to make
 more comfortable for me and people who litle more than just basic 
-
 #+begin_src emacs-lisp
 
 (use-package org
   :straight nil
   :mode ("\\.org\\'" . org-mode)
+  :hook 
+  (org-mode . auto-fill-mode)
   :custom
+  (fill-column 80)
   (org-startup-folded 'overview))
+
+#+end_src
+
+**** markdown-mode
+:PROPERTIES:
+:header-args:emacs-lisp+: :tangle ./modules/ilusia-module-markdown-base.el
+:END:
+
+#+begin_src emacs-lisp
+
+(use-package markdown-mode
+  :straight nil
+  :mode ("README\\.md\\'" . gfm-mode);; github flavored markdown
+  :hook 
+  (markdown-mode . auto-fill-mode)
+  :custom
+  (fill-column 80)
+  :init (setq markdown-command "multimarkdown"))
 
 #+end_src
 
@@ -1320,20 +1340,6 @@ more comfortable for me and people who litle more than just basic
 (use-package js
   :straight nil
   :mode ("\\.js\\'" . js-ts-mode))
-
-#+end_src
-
-**** markdown-mode
-:PROPERTIES:
-:header-args:emacs-lisp+: :tangle ./modules/ilusia-module-markdown-base.el
-:END:
-
-#+begin_src emacs-lisp
-
-(use-package markdown-mode
-  :straight nil
-  :mode ("README\\.md\\'" . gfm-mode)
-  :init (setq markdown-command "multimarkdown"))
 
 #+end_src
 
