@@ -8,12 +8,12 @@
 #+PROPERTY: header-args:emacs-lisp :results none :mkdirp yes
 
 * ilusia Core
+
 ** Package manager
 :PROPERTIES:
 :header-args:emacs-lisp+: :tangle ./core/ilusia-core-package-manager.el
 :END:
 
-this project is using straight
 #+begin_src emacs-lisp
 
 (defvar bootstrap-version)
@@ -38,6 +38,7 @@ this project is using straight
 ;; (setq straight-use-package-by-default t)
 
 #+end_src
+
 * Config management
 :PROPERTIES:
 :header-args:emacs-lisp+: :tangle ./core/ilusia-core-config-management.el
@@ -198,13 +199,14 @@ Plugin repository: https://github.com/emacscollective/no-littering
 
 #+begin_src emacs-lisp
 
-(straight-use-package 'no-littering)
-(require 'no-littering)
+(use-package no-littering
+  :straight t)
 
 #+end_src
+
 * Layers
 ** UI
-** UI-layer
+*** UI-layer
 :PROPERTIES:
 :header-args:emacs-lisp+: :tangle ./layers/ilusia-layer-ui.el
 :END:
@@ -237,6 +239,8 @@ Plugin repository: https://github.com/emacscollective/no-littering
 
 ;; ;; line numbers
 ;; (global-set-key (kbd "C-c l") #'display-line-numbers-mode)
+
+(ilusia-module 'highlight-treesit-auto)
 
 #+end_src
 **** Frame
@@ -309,13 +313,6 @@ Plugin repository: https://github.com/emacscollective/no-littering
 
 #+end_src
 
-*** Treesitter support 
-:PROPERTIES:
-:header-args:emacs-lisp+: :tangle ./layers/ilusia-layer-treesitter.el
-:END:
-#+begin_src emacs-lisp
-(ilusia-module 'highlight-treesit-auto)
-#+end_src
 *** Doom
 :PROPERTIES:
 :header-args:emacs-lisp+: :tangle ./layers/ilusia-layer-modeline-doom.el

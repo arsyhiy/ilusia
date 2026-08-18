@@ -111,8 +111,8 @@
          (current-time)
          start-time))))))
 
-(straight-use-package 'no-littering)
-(require 'no-littering)
+(use-package no-littering
+  :straight t)
 
 
 (provide 'ilusia-core-config-management)

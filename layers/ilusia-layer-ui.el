@@ -13,6 +13,8 @@
 ;; ;; line numbers
 ;; (global-set-key (kbd "C-c l") #'display-line-numbers-mode)
 
+(ilusia-module 'highlight-treesit-auto)
+
 ;; size
 (add-to-list 'default-frame-alist '(height . 50))
 (add-to-list 'default-frame-alist '(width  . 70))
