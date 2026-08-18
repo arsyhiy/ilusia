@@ -34,7 +34,7 @@ this project is using straight
 
 (straight-use-package 'use-package)
 
-;; NOTE: i decided to make like that because for some reason straight tried to download what have :ensurel in it
+;; NOTE: i decided to make like that because for some reason straight tried to download what have :ensure nil in it
 ;; (setq straight-use-package-by-default t)
 
 #+end_src
@@ -926,7 +926,6 @@ i think ilusia has a reasonable settings for corfu
    '((error   "✘" flymake-error)
      (warning "▲" flymake-warning)
      (note    "●" flymake-note))))
-
 
 #+end_src
 

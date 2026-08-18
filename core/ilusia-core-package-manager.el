@@ -16,7 +16,7 @@
 
 (straight-use-package 'use-package)
 
-;; NOTE: i decided to make like that because for some reason straight tried to download what have :ensurel in it
+;; NOTE: i decided to make like that because for some reason straight tried to download what have :ensure in it
 ;; (setq straight-use-package-by-default t)
 
 
