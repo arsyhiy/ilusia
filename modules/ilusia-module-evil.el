@@ -31,6 +31,8 @@
   (evil-define-key 'normal 'global (kbd "<leader> g s") 'magit-status)
   (evil-define-key 'normal 'global (kbd "<leader> g d") 'magit-diff-buffer-file)
   (evil-define-key 'normal 'global (kbd "<leader> g l") 'magit-log-current)
+  (evil-define-key 'normal 'global (kbd "<leader> g c") 'magit-commit)
+  (evil-define-key 'normal 'global (kbd "<leader> g p") 'magit-push-current-to-pushremote)
   (evil-define-key 'normal 'global (kbd "<leader> g b") 'vc-annotate) ;; literally git blame 
 
 
@@ -56,6 +58,26 @@
 
   (evil-define-key 'normal 'global (kbd "<leader> f n") 'flymake-goto-next-error)
   (evil-define-key 'normal 'global (kbd "<leader> f p") 'flymake-goto-prev-error)
+
+  ;;;; project
+  (evil-define-key 'normal 'global (kbd "<leader> p p") 'project-switch-project)
+  (evil-define-key 'normal 'global (kbd "<leader> p f") 'project-find-file)
+  (evil-define-key 'normal 'global (kbd "<leader> p g") 'project-find-regexp)
+
+  ;;;; lsp
+  (evil-define-key 'normal 'global (kbd "<leader> l d") 'xref-find-definitions)
+  (evil-define-key 'normal 'global (kbd "<leader> l r") 'xref-find-references)
+  (evil-define-key 'normal 'global (kbd "<leader> l a") 'lsp-execute-code-action)
+  (evil-define-key 'normal 'global (kbd "<leader> l R") 'lsp-rename)
+
+
+  ;;; execute
+  (evil-define-key 'normal 'global (kbd "<leader> x f") 'format-all-buffer)
+  (evil-define-key 'normal 'global (kbd "<leader> x t") 'projectile-test-project)
+  (evil-define-key 'normal 'global (kbd "<leader> x r") 'compile)
+
+  (evil-define-key 'normal 'global (kbd "<leader> l d") 'xref-find-definitions)
+  (evil-define-key 'normal 'global (kbd "<leader> l r") 'xref-find-references)
 
   (evil-define-key 'normal 'global (kbd "gcc")
     (lambda ()

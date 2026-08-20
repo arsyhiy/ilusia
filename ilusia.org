@@ -448,6 +448,15 @@ adding mode and some convenient functions
 
 #+end_src
 
+** formatting 
+:PROPERTIES:
+:header-args:emacs-lisp+: :tangle ./layers/ilusia-layer-format.el
+:END:
+#+begin_src  emacs-lisp
+
+(ilusia-module 'format)
+
+#+end_src
 * Modules
 
 ** Input and editing
@@ -493,6 +502,8 @@ plugin repository: https://github.com/emacs-evil/evil
   (evil-define-key 'normal 'global (kbd "<leader> g s") 'magit-status)
   (evil-define-key 'normal 'global (kbd "<leader> g d") 'magit-diff-buffer-file)
   (evil-define-key 'normal 'global (kbd "<leader> g l") 'magit-log-current)
+  (evil-define-key 'normal 'global (kbd "<leader> g c") 'magit-commit)
+  (evil-define-key 'normal 'global (kbd "<leader> g p") 'magit-push-current-to-pushremote)
   (evil-define-key 'normal 'global (kbd "<leader> g b") 'vc-annotate) ;; literally git blame 
 
 
@@ -518,6 +529,26 @@ plugin repository: https://github.com/emacs-evil/evil
 
   (evil-define-key 'normal 'global (kbd "<leader> f n") 'flymake-goto-next-error)
   (evil-define-key 'normal 'global (kbd "<leader> f p") 'flymake-goto-prev-error)
+
+  ;;;; project
+  (evil-define-key 'normal 'global (kbd "<leader> p p") 'project-switch-project)
+  (evil-define-key 'normal 'global (kbd "<leader> p f") 'project-find-file)
+  (evil-define-key 'normal 'global (kbd "<leader> p g") 'project-find-regexp)
+
+  ;;;; lsp
+  (evil-define-key 'normal 'global (kbd "<leader> l d") 'xref-find-definitions)
+  (evil-define-key 'normal 'global (kbd "<leader> l r") 'xref-find-references)
+  (evil-define-key 'normal 'global (kbd "<leader> l a") 'lsp-execute-code-action)
+  (evil-define-key 'normal 'global (kbd "<leader> l R") 'lsp-rename)
+
+
+  ;;; execute
+  (evil-define-key 'normal 'global (kbd "<leader> x f") 'format-all-buffer)
+  (evil-define-key 'normal 'global (kbd "<leader> x t") 'projectile-test-project)
+  (evil-define-key 'normal 'global (kbd "<leader> x r") 'compile)
+
+  (evil-define-key 'normal 'global (kbd "<leader> l d") 'xref-find-definitions)
+  (evil-define-key 'normal 'global (kbd "<leader> l r") 'xref-find-references)
 
   (evil-define-key 'normal 'global (kbd "gcc")
     (lambda ()
@@ -820,6 +851,17 @@ this plugin is built in
 
 #+end_src
 
+*** formating
+:PROPERTIES:
+:header-args:emacs-lisp+: :tangle ./modules/ilusia-module-format.el
+:END:
+#+begin_src emacs-lisp
+
+(use-package format-all
+  :straight t
+  :config
+  (format-all-mode 1))
+#+end_src 
 *** ide
 **** corfu
 :PROPERTIES:
@@ -1347,10 +1389,8 @@ more comfortable for me and people who litle more than just basic
 library repository: https://github.com/bbatsov/projectile
 #+begin_src emacs-lisp
 
-;; just download projectile
 (use-package projectile
-  :straight t
-)
+  :straight t)
 
 #+end_src
 

@@ -1,7 +1,5 @@
-;; just download projectile
 (use-package projectile
-  :straight t
-)
+  :straight t)
 
 
 (provide 'ilusia-module-projectile)
