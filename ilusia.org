@@ -193,9 +193,11 @@
 
 #+end_src
 
-** No littering
+** very good things for core
+*** No littering
 
 Plugin repository: https://github.com/emacscollective/no-littering
+from repository: Help keeping ~/.config/emacs clean
 
 #+begin_src emacs-lisp
 
@@ -205,44 +207,42 @@ Plugin repository: https://github.com/emacscollective/no-littering
 #+end_src
 
 * Layers
-** UI
-*** UI-layer
+** Input and editing
 :PROPERTIES:
-:header-args:emacs-lisp+: :tangle ./layers/ilusia-layer-ui.el
+:header-args:emacs-lisp+: :tangle ./layers/ilusia-layer-input-editing.el
 :END:
-**** Text
-***** Typefaces
 
 #+begin_src emacs-lisp
 
-;; icons
-(ilusia-module 'all-the-icons)
+;; confirmation
+(advice-add 'yes-or-no-p :override #'y-or-n-p)
+
+;; advanced commands
+(put 'narrow-to-region 'disabled nil)
+
+;; modules
+(ilusia-module 'evil)
+
+(ilusia-module 'god-mode)
+
+(use-package elec-pair
+  :straight nil
+  :custom
+  (electric-pair-pairs
+   '((?\( . ?\))
+     (?\[ . ?\])
+     (?\{ . ?\)))
+  :config
+  (electric-pair-mode 1)))
 
 #+end_src
 
-***** decorations
+** interface
+*** base interface part
+:PROPERTIES:
+:header-args:emacs-lisp+: :tangle ./layers/ilusia-layer-ui-base.el
+:END:
 
-#+begin_src emacs-lisp
-(ilusia-module 'hl-todo)
-(ilusia-module 'highlight-indent-guides)
-(ilusia-module 'highlight-rainbow-delimiters)
-
-#+end_src
-
-**** Buffer
-
-#+begin_src emacs-lisp
-;;TODO: найти и добавить что что влияет на буффер внешене
-
-;; ;; centering
-;; (mirage-module 'olivetti)
-
-;; ;; line numbers
-;; (global-set-key (kbd "C-c l") #'display-line-numbers-mode)
-
-(ilusia-module 'highlight-treesit-auto)
-
-#+end_src
 **** Frame
 #+begin_src emacs-lisp
 
@@ -250,19 +250,19 @@ Plugin repository: https://github.com/emacscollective/no-littering
 (add-to-list 'default-frame-alist '(height . 50))
 (add-to-list 'default-frame-alist '(width  . 70))
 
-;; tabs
+;; UI elements
 (tab-bar-mode -1)
-;; scroll bar
 (scroll-bar-mode -1)
-;; toolbar
 (tool-bar-mode -1)
-;; tooltips
 (tooltip-mode -1)
-;; menu bar
 (menu-bar-mode -1)
 
 ;; title
 (setq-default frame-title-format '("%b"))
+
+
+;; visible bell
+(setq visible-bell t)
 
 #+end_src
 
@@ -280,37 +280,41 @@ Plugin repository: https://github.com/emacscollective/no-littering
 ;; (setq split-width-threshold 70)
 
 #+end_src
-**** bell
-
+**** buffer
 #+begin_src emacs-lisp
 
-;; visible bell
-(setq visible-bell t)
+;; icons
+(ilusia-module 'all-the-icons)
+
+
+;; decorations
+(ilusia-module 'hl-todo)
+(ilusia-module 'highlight-indent-guides)
+(ilusia-module 'highlight-rainbow-delimiters)
+
+;; treesittter
+(ilusia-module 'highlight-treesit-auto)
 
 #+end_src
-**** Mode line
+
+**** Modeline
+adding mode and some convenient functions
 
 #+begin_src emacs-lisp
-;;TODO: решить что мне нужно из mode для mode line
-
-;; time
-;; (display-time-mode t)
 
 ;; column numbers
 (column-number-mode)
 
-;; mode display
-;; (ilusia-module 'delight)
-
 #+end_src
 
+**** minibuffer
+#+begin_src emacs-lisp
+;; there can be your code
+#+end_src
 **** Extensions
 
 #+begin_src emacs-lisp
-;; TODO:  написать хотябы один extension для ui
-;; extensions
-;;(ilusia-extend 'ui)
-
+;; there can be your code
 #+end_src
 
 *** Doom
@@ -323,7 +327,6 @@ Plugin repository: https://github.com/emacscollective/no-littering
 
 (setq-default doom-modeline-height 40)
 
-;; mode line initialization hook
 (add-hook 'after-init-hook #'doom-modeline-mode)
 
 #+end_src
@@ -332,7 +335,6 @@ Plugin repository: https://github.com/emacscollective/no-littering
 :header-args:emacs-lisp+: :tangle ./layers/ilusia-layer-dashboard.el
 :END:
 
-for a certain time ilusia will have some basic settings for dashboard
 #+begin_src emacs-lisp
 
 (ilusia-module 'dashboard)
@@ -341,7 +343,7 @@ for a certain time ilusia will have some basic settings for dashboard
 (setq dashboard-set-file-icons t)
 
 (setq dashboard-items
-      '((recents  . 5)
+      '((recents  . 10)
         (projects . 5)
         (bookmarks . 5)
         (registers . 5)
@@ -355,27 +357,47 @@ for a certain time ilusia will have some basic settings for dashboard
 :header-args:emacs-lisp+: :tangle ./layers/ilusia-layer-version-control.el
 :END:
 
-all functionality for vs
 #+begin_src emacs-lisp
 (ilusia-module 'magit)
 (ilusia-module 'smerge)
+(ilusia-module 'diff-hl)
 
 #+end_src
 
-*** IDE
+*** ide functionality
 :PROPERTIES:
 :header-args:emacs-lisp+: :tangle ./layers/ilusia-layer-ide.el
 :END:
 
+**** lsp
 #+begin_src emacs-lisp
 
-(ilusia-module 'yasnippet)
-(ilusia-module 'eldoc)
-(ilusia-module 'flymake)
 (ilusia-module 'lsp)
+
+#+end_src
+**** complition
+#+begin_src emacs-lisp
+
 (ilusia-module 'cape)
 (ilusia-module 'corfu)
 
+#+end_src
+**** diagnostic information
+#+begin_src  emacs-lisp
+(ilusia-module 'eldoc)
+(ilusia-module 'flymake)
+#+end_src
+
+**** templates
+#+begin_src  emacs-lisp
+(ilusia-module 'yasnippet)
+#+end_src
+
+*** languages
+:PROPERTIES:
+:header-args:emacs-lisp+: :tangle ./layers/ilusia-layer-languages.el
+:END:
+#+begin_src emacs-lisp
 
 (ilusia-module 'cc-base)
 (ilusia-module 'css-base)
@@ -386,46 +408,6 @@ all functionality for vs
 (ilusia-module 'org-base)
 (ilusia-module 'python-base)
 (ilusia-module 'typescript-base)
-
-
-#+end_src
-
-** Input
-:PROPERTIES:
-:header-args:emacs-lisp+: :tangle ./layers/ilusia-layer-input.el
-:END:
-
-#+begin_src emacs-lisp
-
-;; confirmation
-(advice-add 'yes-or-no-p :override #'y-or-n-p)
-
-;; advanced commands
-(put 'narrow-to-region 'disabled nil)
-
-;; modules
-(ilusia-module 'evil)
-
-(ilusia-module 'god-mode)
-
-#+end_src
-
-** Editing
-:PROPERTIES:
-:header-args:emacs-lisp+: :tangle ./layers/ilusia-layer-editing.el
-:END:
-
-*** electric pair
-#+begin_src emacs-lisp
-(use-package elec-pair
-  :straight nil
-  :custom
-  (electric-pair-pairs
-   '((?\( . ?\))
-     (?\[ . ?\])
-     (?\{ . ?\)))
-  :config
-  (electric-pair-mode 1)))
 
 #+end_src
 ** Navigation
@@ -464,116 +446,101 @@ all functionality for vs
 (setq kept-new-versions 2)
 (setq kept-old-versions 2)
 
-
 #+end_src
 
 * Modules
 
-** editing
+** Input and editing
 *** evil
 :PROPERTIES:
 :header-args:emacs-lisp+: :tangle ./modules/ilusia-module-evil.el
 :END:
 
+**** evil mode
+plugin repository: https://github.com/emacs-evil/evil
 #+begin_src emacs-lisp
 
-
-;; NOTE: make universal not personal
-;; evil
 (use-package evil
   :straight t
-  :hook
-  (after-init . evil-mode)
+  :hook (after-init . evil-mode)
+
   :init
-  (setq evil-want-integration t)
-  (setq evil-want-keybinding nil)
-  (setq evil-want-C-u-scroll t)
-  (setq evil-want-C-u-delete t)
+  (setq evil-want-integration t
+        evil-want-keybinding nil
+        evil-want-C-u-scroll t
+        evil-want-C-u-delete t
+        evil-leader/in-all-states t
+        evil-want-fine-undo t)
+
   :config
+  ;; States
   (evil-set-initial-state 'eshell-mode 'emacs)
   (evil-set-initial-state 'shell-mode 'emacs)
   (evil-set-undo-system 'undo-tree)
 
-  (setq evil-leader/in-all-states t)
-  (setq evil-want-fine-undo t)
-
   (evil-set-leader 'normal (kbd "SPC"))
   (evil-set-leader 'visual (kbd "SPC"))
 
-  (evil-define-key 'normal 'global (kbd "<leader> s f") 'consult-find)
-  (evil-define-key 'normal 'global (kbd "<leader> s g") 'consult-grep)
-  (evil-define-key 'normal 'global (kbd "<leader> s G") 'consult-git-grep)
-  (evil-define-key 'normal 'global (kbd "<leader> s r") 'consult-ripgrep)
-  (evil-define-key 'normal 'global (kbd "<leader> s h") 'consult-info)
-  (evil-define-key 'normal 'global (kbd "<leader> /") 'consult-line)
 
-  (evil-define-key 'normal 'global (kbd "<leader> x x") 'consult-flymake)
-  (evil-define-key 'normal 'global (kbd "] d") 'flymake-goto-next-error)
-  (evil-define-key 'normal 'global (kbd "[ d") 'flymake-goto-prev-error)
+
+  ;;;; file navigation
 
   (evil-define-key 'normal 'global (kbd "<leader> d d") 'dired)
-  (evil-define-key 'normal 'global (kbd "<leader> d j") 'dired-jump)
-  (evil-define-key 'normal 'global (kbd "<leader> x f") 'find-file)
+  (evil-define-key 'normal 'global (kbd "<leader> d f") 'find-file)
 
-  (evil-define-key 'normal 'global (kbd "] c") 'diff-hl-next-hunk)
-  (evil-define-key 'normal 'global (kbd "[ c") 'diff-hl-previous-hunk)
 
-  (evil-define-key 'normal 'global (kbd "<leader> g g") 'magit-status)
-  (evil-define-key 'normal 'global (kbd "<leader> g l") 'magit-log-current)
+  ;;;; version controll
+  (evil-define-key 'normal 'global (kbd "<leader> g s") 'magit-status)
   (evil-define-key 'normal 'global (kbd "<leader> g d") 'magit-diff-buffer-file)
-  (evil-define-key 'normal 'global (kbd "<leader> g D") 'diff-hl-show-hunk)
-  (evil-define-key 'normal 'global (kbd "<leader> g b") 'vc-annotate)
+  (evil-define-key 'normal 'global (kbd "<leader> g l") 'magit-log-current)
+  (evil-define-key 'normal 'global (kbd "<leader> g b") 'vc-annotate) ;; literally git blame 
 
-  (evil-define-key 'normal 'global (kbd "] b") 'switch-to-next-buffer)
-  (evil-define-key 'normal 'global (kbd "[ b") 'switch-to-prev-buffer)
-  (evil-define-key 'normal 'global (kbd "<leader> b i") 'consult-buffer)
-  (evil-define-key 'normal 'global (kbd "<leader> b b") 'ibuffer)
-  (evil-define-key 'normal 'global (kbd "<leader> b d") 'kill-current-buffer)
+
+  ;;;; buffer
+  
+  (evil-define-key 'normal 'global (kbd "<leader> b n") 'switch-to-next-buffer)
+  (evil-define-key 'normal 'global (kbd "<leader> b p") 'switch-to-prev-buffer)
   (evil-define-key 'normal 'global (kbd "<leader> b k") 'kill-current-buffer)
-  (evil-define-key 'normal 'global (kbd "<leader> b x") 'kill-current-buffer)
-  (evil-define-key 'normal 'global (kbd "<leader> b s") 'save-buffer)
+
+  ;;;; consult
+
   (evil-define-key 'normal 'global (kbd "<leader>SPC") 'consult-buffer)
+  (evil-define-key 'normal 'global (kbd "<leader> c f") 'consult-find)
+  (evil-define-key 'normal 'global (kbd "<leader> c g") 'consult-grep)
+  (evil-define-key 'normal 'global (kbd "<leader> c G") 'consult-git-grep)
+  (evil-define-key 'normal 'global (kbd "<leader> c r") 'consult-ripgrep)
+  (evil-define-key 'normal 'global (kbd "<leader> c i") 'consult-info)
+  (evil-define-key 'normal 'global (kbd "<leader> c l") 'consult-line)
+  (evil-define-key 'normal 'global (kbd "<leader> c m") 'consult-flymake)
+  (evil-define-key 'normal 'global (kbd "<leader> c p") 'consult-project-buffer)
 
-  (evil-define-key 'normal 'global (kbd "<leader> p b") 'consult-project-buffer)
-  (evil-define-key 'normal 'global (kbd "<leader> p p") 'project-switch-project)
-  (evil-define-key 'normal 'global (kbd "<leader> p f") 'project-find-file)
-  (evil-define-key 'normal 'global (kbd "<leader> p g") 'project-find-regexp)
-  (evil-define-key 'normal 'global (kbd "<leader> p k") 'project-kill-buffers)
-  (evil-define-key 'normal 'global (kbd "<leader> p D") 'project-dired)
+  ;;;; flymake
 
-  (evil-define-key 'normal 'global (kbd "P") 'consult-yank-from-kill-ring)
-  (evil-define-key 'normal 'global (kbd "<leader> P") 'consult-yank-from-kill-ring)
+  (evil-define-key 'normal 'global (kbd "<leader> f n") 'flymake-goto-next-error)
+  (evil-define-key 'normal 'global (kbd "<leader> f p") 'flymake-goto-prev-error)
 
-  (evil-define-key 'normal 'global (kbd "<leader> .") 'embark-act)
-
-  (evil-define-key 'normal 'global (kbd "<leader> u") 'undo-tree-visualize)
-
-  (evil-define-key 'normal 'global (kbd "<leader> h m") 'describe-mode)
-  (evil-define-key 'normal 'global (kbd "<leader> h f") 'describe-function)
-  (evil-define-key 'normal 'global (kbd "<leader> h v") 'describe-variable)
-  (evil-define-key 'normal 'global (kbd "<leader> h k") 'describe-key)
-
-  (evil-define-key 'normal 'global (kbd "] t") 'tab-next)
-  (evil-define-key 'normal 'global (kbd "[ t") 'tab-previous)
-
-(evil-define-key 'normal 'global (kbd "gcc")
+  (evil-define-key 'normal 'global (kbd "gcc")
     (lambda ()
       (interactive)
       (if (not (use-region-p))
-        (comment-or-uncomment-region (line-beginning-position) (line-end-position)))))
+          (comment-or-uncomment-region (line-beginning-position) (line-end-position)))))
 
   (evil-define-key 'visual 'global (kbd "gc")
     (lambda ()
       (interactive)
       (if (use-region-p)
-        (comment-or-uncomment-region (region-beginning) (region-end)))))
-
+          (comment-or-uncomment-region (region-beginning) (region-end)))))
   
-   (evil-mode 1))
+)
 
 ;; bindings
 (global-set-key (kbd "C-<escape>") #'evil-mode)
 
+#+end_src
+
+**** evil-collection
+plugin repository: https://github.com/emacs-evil/evil-collection
+#+begin_src emacs-lisp
 
 (use-package evil-collection
   :straight t
@@ -582,25 +549,35 @@ all functionality for vs
   :hook
   (evil-mode . evil-collection-init))
 
+#+end_src
+**** evil-sorround
+plugin repository https://github.com/emacs-evil/evil-surround
+#+begin_src emacs-lisp
+
 (use-package evil-surround
   :straight t
   :after evil-collection
   :config
   (global-evil-surround-mode 1))
 
+#+end_src
+
+**** evil-machit
+plugin repository: https://github.com/redguardtoo/evil-matchit
+#+begin_src emacs-lisp
 (use-package evil-matchit
   :straight t
   :after evil-collection
   :config
   (global-evil-matchit-mode 1))
-
 #+end_src
+
 
 *** god-mode
 :PROPERTIES:
 :header-args:emacs-lisp+: :tangle ./modules/ilusia-module-god-mode.el
 :END:
-
+plugin repository: https://github.com/emacsorphanage/god-mode
 #+begin_src emacs-lisp
 
 (use-package god-mode
@@ -648,6 +625,7 @@ all functionality for vs
 :header-args:emacs-lisp+: :tangle ./modules/ilusia-module-which-key.el
 :END:
 
+in plugin repository it says it's now built in emacs
 #+begin_src emacs-lisp
 
 (use-package which-key
@@ -662,7 +640,7 @@ all functionality for vs
 :PROPERTIES:
 :header-args:emacs-lisp+: :tangle ./modules/ilusia-module-dashboard.el
 :END:
-
+plugin repository: github.com/emacs-dashboard/dashboard
 #+begin_src emacs-lisp
 
 (use-package dashboard
@@ -675,29 +653,14 @@ all functionality for vs
 :PROPERTIES:
 :header-args:emacs-lisp+: :tangle ./modules/ilusia-module-ef-themes.el
 :END:
+plugin repository: https://github.com/protesilaos/ef-themes
 
-TODO:  перписать в том ввиде котором мне понравится 
-в оригинале препологается что themes это отдельный раздел как и UI решил обьеденить
 #+begin_src emacs-lisp
 
 (use-package ef-themes
-  :straight t 
-    )
+  :straight t)
 
-;; (require 'ef-themes)
-
-#+end_src
-
-*** Doom-theme
-:PROPERTIES:
-:header-args:emacs-lisp+: :tangle ./modules/ilusia-module-doom-themes.el
-:END:
-
-#+begin_src emacs-lisp
-
-(use-package doom-themes
-  :straight t 
-  )
+(load-theme 'ef-orange t)
 
 #+end_src
 
@@ -705,19 +668,18 @@ TODO:  перписать в том ввиде котором мне понра�
 :PROPERTIES:
 :header-args:emacs-lisp+: :tangle ./modules/ilusia-module-doom-modeline.el
 :END:
+plugin repository: https://github.com/seagle0128/doom-modeline
 
 #+begin_src emacs-lisp
-(straight-use-package 'doom-modeline)
 (use-package doom-modeline
-  :straight t
-  )
+  :straight t)
 #+end_src
 
 *** diff-hl
-
 :PROPERTIES:
 :header-args:emacs-lisp+: :tangle ./modules/ilusia-module-diff-hl.el
 :END:
+plugin repository: https://github.com/dgutov/diff-hl
 
 #+begin_src emacs-lisp
 
@@ -741,6 +703,7 @@ TODO:  перписать в том ввиде котором мне понра�
 :PROPERTIES:
 :header-args:emacs-lisp+: :tangle ./modules/ilusia-module-hl-todo.el
 :END:
+plugin repository: github.com/tarsius/hl-todo
 
 #+begin_src emacs-lisp
 
@@ -754,6 +717,7 @@ TODO:  перписать в том ввиде котором мне понра�
 :PROPERTIES:
 :header-args:emacs-lisp+: :tangle ./modules/ilusia-module-highlight-indent-guides.el
 :END:
+plugin repository: https://github.com/bumblepup/highlight-indent-guides
 #+begin_src emacs-lisp
 (use-package highlight-indent-guides
 
@@ -767,6 +731,7 @@ TODO:  перписать в том ввиде котором мне понра�
 :PROPERTIES:
 :header-args:emacs-lisp+: :tangle ./modules/ilusia-module-highlight-rainbow-delimiters.el
 :END:
+plugin repository: https://github.com/Fanael/rainbow-delimiters 
 #+begin_src emacs-lisp
 (use-package rainbow-delimiters
   :straight t
@@ -782,6 +747,7 @@ TODO:  перписать в том ввиде котором мне понра�
 :PROPERTIES:
 :header-args:emacs-lisp+: :tangle ./modules/ilusia-module-highlight-treesit-auto.el
 :END:
+plugin repository: https://github.com/renzmann/treesit-auto
 #+begin_src emacs-lisp
 (use-package treesit-auto
   :straight t
@@ -806,11 +772,10 @@ TODO:  перписать в том ввиде котором мне понра�
 :header-args:emacs-lisp+: :tangle ./modules/ilusia-module-all-the-icons.el
 :END:
 
+plugin repository: https://github.com/domtronn/all-the-icons.el
 #+begin_src emacs-lisp
-(straight-use-package 'all-the-icons)
 (use-package all-the-icons
-  :straight t
-  )
+  :straight t)
 
 #+end_src
 
@@ -829,14 +794,11 @@ the local machine:
 :header-args:emacs-lisp+: :tangle ./modules/ilusia-module-magit.el
 :END:
 
+plugin repository: https://github.com/magit/magit
 #+begin_src emacs-lisp
 
-
 (use-package magit
-  :straight t
-  )
-
-(global-set-key (kbd "C-x g") #'magit-status)
+  :straight t)
 
 #+end_src
 *** smerge
@@ -844,7 +806,9 @@ the local machine:
 :header-args:emacs-lisp+: :tangle ./modules/ilusia-module-smerge.el
 :END:
 
+this plugin is built in 
 #+begin_src emacs-lisp
+
 (use-package smerge-mode
   :straight nil
   :defer t
@@ -853,6 +817,7 @@ the local machine:
           ("C-c ^ l" . smerge-keep-lower)
           ("C-c ^ n" . smerge-next)
           ("C-c ^ p" . smerge-previous)))
+
 #+end_src
 
 *** ide
@@ -860,7 +825,8 @@ the local machine:
 :PROPERTIES:
 :header-args:emacs-lisp+: :tangle ./modules/ilusia-module-corfu.el
 :END:
-i think ilusia has a reasonable settings for corfu
+
+plugin repository: https://github.com/minad/corfu
 #+begin_src emacs-lisp
 
 (use-package corfu
@@ -885,10 +851,11 @@ i think ilusia has a reasonable settings for corfu
 :header-args:emacs-lisp+: :tangle ./modules/ilusia-module-eldoc.el
 :END:
 
+this plugin is built in
 #+begin_src emacs-lisp
 
 (use-package eldoc
-  :straight t
+  :straight nil
   :config
   (setq eldoc-idle-delay 0.2)
   (setq eldoc-echo-area-use-multiline-p nil)
@@ -910,6 +877,7 @@ i think ilusia has a reasonable settings for corfu
 :header-args:emacs-lisp+: :tangle ./modules/ilusia-module-flymake.el
 :END:
 
+this plugin is built in
 #+begin_src emacs-lisp
 
 ;;TODO: design how diagnostic all alike thing work 
@@ -931,6 +899,7 @@ i think ilusia has a reasonable settings for corfu
 :header-args:emacs-lisp+: :tangle ./modules/ilusia-module-lsp.el
 :END:
 
+plugin repository: https://github.com/emacs-lsp/lsp-mode
 #+begin_src emacs-lisp
 
 (use-package lsp-mode
@@ -1006,6 +975,8 @@ i think ilusia has a reasonable settings for corfu
 :PROPERTIES:
 :header-args:emacs-lisp+: :tangle ./modules/ilusia-module-cape.el
 :END:
+
+plugin repository: https://github.com/minad/cape
 #+begin_src emacs-lisp
 
 (use-package cape
@@ -1033,6 +1004,8 @@ i think ilusia has a reasonable settings for corfu
 :PROPERTIES:
 :header-args:emacs-lisp+: :tangle ./modules/ilusia-module-yasnippet.el
 :END:
+
+plugin repository: https://github.com/joaotavora/yasnippet
 #+begin_src emacs-lisp
 
 (use-package yasnippet
@@ -1048,6 +1021,7 @@ i think ilusia has a reasonable settings for corfu
 :header-args:emacs-lisp+: :tangle ./modules/ilusia-module-consult.el
 :END:
 
+plugin repository: https://github.com/minad/consult
 #+begin_src emacs-lisp
 
 (use-package consult
@@ -1079,6 +1053,7 @@ i think ilusia has a reasonable settings for corfu
 :header-args:emacs-lisp+: :tangle ./modules/ilusia-module-marginalia.el
 :END:
 
+plugin repository: https://github.com/minad/marginalia
 #+begin_src emacs-lisp
 
 (use-package marginalia
@@ -1096,6 +1071,7 @@ i think ilusia has a reasonable settings for corfu
 :header-args:emacs-lisp+: :tangle ./modules/ilusia-module-vertico.el
 :END:
 
+plugin repository https://github.com/minad/vertico
 #+begin_src emacs-lisp
 
 (use-package vertico
@@ -1115,6 +1091,7 @@ i think ilusia has a reasonable settings for corfu
 :header-args:emacs-lisp+: :tangle ./modules/ilusia-module-dired.el
 :END:
 
+this is built in feature
 #+begin_src emacs-lisp
 
 (with-eval-after-load 'dired
@@ -1155,6 +1132,8 @@ i think ilusia has a reasonable settings for corfu
 :PROPERTIES:
 :header-args:emacs-lisp+: :tangle ./modules/ilusia-module-isearch.el
 :END:
+
+this is built in feature
 #+begin_src emacs-lisp
 
 (with-eval-after-load 'isearch
@@ -1169,6 +1148,7 @@ i think ilusia has a reasonable settings for corfu
 :header-args:emacs-lisp+: :tangle ./modules/ilusia-module-orderless.el
 :END:
 
+plugin repository: https://github.com/oantolin/orderless
 #+begin_src emacs-lisp
 
 (use-package orderless
@@ -1191,6 +1171,7 @@ i think ilusia has a reasonable settings for corfu
 :header-args:emacs-lisp+: :tangle ./modules/ilusia-module-vterm.el
 :END:
 
+plugin repository: https://github.com/emacsmirror/vterm
 #+begin_src emacs-lisp
 
 (use-package vterm
@@ -1363,6 +1344,7 @@ more comfortable for me and people who litle more than just basic
 :header-args:emacs-lisp+: :tangle ./modules/ilusia-module-projectile.el
 :END:
 
+library repository: https://github.com/bbatsov/projectile
 #+begin_src emacs-lisp
 
 ;; just download projectile

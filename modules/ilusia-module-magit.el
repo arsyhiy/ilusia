@@ -1,8 +1,5 @@
 (use-package magit
-  :straight t
-  )
-
-(global-set-key (kbd "C-x g") #'magit-status)
+  :straight t)
 
 
 (provide 'ilusia-module-magit)

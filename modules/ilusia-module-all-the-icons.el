@@ -1,7 +1,5 @@
-(straight-use-package 'all-the-icons)
 (use-package all-the-icons
-  :straight t
-  )
+  :straight t)
 
 
 (provide 'ilusia-module-all-the-icons)

@@ -1,5 +1,5 @@
 (use-package eldoc
-  :straight t
+  :straight nil
   :config
   (setq eldoc-idle-delay 0.2)
   (setq eldoc-echo-area-use-multiline-p nil)

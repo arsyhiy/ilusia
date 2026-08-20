@@ -1,99 +1,78 @@
-;; NOTE: make universal not personal
-;; evil
 (use-package evil
   :straight t
-  :hook
-  (after-init . evil-mode)
+  :hook (after-init . evil-mode)
+
   :init
-  (setq evil-want-integration t)
-  (setq evil-want-keybinding nil)
-  (setq evil-want-C-u-scroll t)
-  (setq evil-want-C-u-delete t)
+  (setq evil-want-integration t
+        evil-want-keybinding nil
+        evil-want-C-u-scroll t
+        evil-want-C-u-delete t
+        evil-leader/in-all-states t
+        evil-want-fine-undo t)
+
   :config
+  ;; States
   (evil-set-initial-state 'eshell-mode 'emacs)
   (evil-set-initial-state 'shell-mode 'emacs)
   (evil-set-undo-system 'undo-tree)
 
-  (setq evil-leader/in-all-states t)
-  (setq evil-want-fine-undo t)
-
   (evil-set-leader 'normal (kbd "SPC"))
   (evil-set-leader 'visual (kbd "SPC"))
 
-  (evil-define-key 'normal 'global (kbd "<leader> s f") 'consult-find)
-  (evil-define-key 'normal 'global (kbd "<leader> s g") 'consult-grep)
-  (evil-define-key 'normal 'global (kbd "<leader> s G") 'consult-git-grep)
-  (evil-define-key 'normal 'global (kbd "<leader> s r") 'consult-ripgrep)
-  (evil-define-key 'normal 'global (kbd "<leader> s h") 'consult-info)
-  (evil-define-key 'normal 'global (kbd "<leader> /") 'consult-line)
 
-  (evil-define-key 'normal 'global (kbd "<leader> x x") 'consult-flymake)
-  (evil-define-key 'normal 'global (kbd "] d") 'flymake-goto-next-error)
-  (evil-define-key 'normal 'global (kbd "[ d") 'flymake-goto-prev-error)
+
+  ;;;; file navigation
 
   (evil-define-key 'normal 'global (kbd "<leader> d d") 'dired)
-  (evil-define-key 'normal 'global (kbd "<leader> d j") 'dired-jump)
-  (evil-define-key 'normal 'global (kbd "<leader> x f") 'find-file)
+  (evil-define-key 'normal 'global (kbd "<leader> d f") 'find-file)
 
-  (evil-define-key 'normal 'global (kbd "] c") 'diff-hl-next-hunk)
-  (evil-define-key 'normal 'global (kbd "[ c") 'diff-hl-previous-hunk)
 
-  (evil-define-key 'normal 'global (kbd "<leader> g g") 'magit-status)
-  (evil-define-key 'normal 'global (kbd "<leader> g l") 'magit-log-current)
+  ;;;; version controll
+  (evil-define-key 'normal 'global (kbd "<leader> g s") 'magit-status)
   (evil-define-key 'normal 'global (kbd "<leader> g d") 'magit-diff-buffer-file)
-  (evil-define-key 'normal 'global (kbd "<leader> g D") 'diff-hl-show-hunk)
-  (evil-define-key 'normal 'global (kbd "<leader> g b") 'vc-annotate)
+  (evil-define-key 'normal 'global (kbd "<leader> g l") 'magit-log-current)
+  (evil-define-key 'normal 'global (kbd "<leader> g b") 'vc-annotate) ;; literally git blame 
 
-  (evil-define-key 'normal 'global (kbd "] b") 'switch-to-next-buffer)
-  (evil-define-key 'normal 'global (kbd "[ b") 'switch-to-prev-buffer)
-  (evil-define-key 'normal 'global (kbd "<leader> b i") 'consult-buffer)
-  (evil-define-key 'normal 'global (kbd "<leader> b b") 'ibuffer)
-  (evil-define-key 'normal 'global (kbd "<leader> b d") 'kill-current-buffer)
+
+  ;;;; buffer
+  
+  (evil-define-key 'normal 'global (kbd "<leader> b n") 'switch-to-next-buffer)
+  (evil-define-key 'normal 'global (kbd "<leader> b p") 'switch-to-prev-buffer)
   (evil-define-key 'normal 'global (kbd "<leader> b k") 'kill-current-buffer)
-  (evil-define-key 'normal 'global (kbd "<leader> b x") 'kill-current-buffer)
-  (evil-define-key 'normal 'global (kbd "<leader> b s") 'save-buffer)
+
+  ;;;; consult
+
   (evil-define-key 'normal 'global (kbd "<leader>SPC") 'consult-buffer)
+  (evil-define-key 'normal 'global (kbd "<leader> c f") 'consult-find)
+  (evil-define-key 'normal 'global (kbd "<leader> c g") 'consult-grep)
+  (evil-define-key 'normal 'global (kbd "<leader> c G") 'consult-git-grep)
+  (evil-define-key 'normal 'global (kbd "<leader> c r") 'consult-ripgrep)
+  (evil-define-key 'normal 'global (kbd "<leader> c i") 'consult-info)
+  (evil-define-key 'normal 'global (kbd "<leader> c l") 'consult-line)
+  (evil-define-key 'normal 'global (kbd "<leader> c m") 'consult-flymake)
+  (evil-define-key 'normal 'global (kbd "<leader> c p") 'consult-project-buffer)
 
-  (evil-define-key 'normal 'global (kbd "<leader> p b") 'consult-project-buffer)
-  (evil-define-key 'normal 'global (kbd "<leader> p p") 'project-switch-project)
-  (evil-define-key 'normal 'global (kbd "<leader> p f") 'project-find-file)
-  (evil-define-key 'normal 'global (kbd "<leader> p g") 'project-find-regexp)
-  (evil-define-key 'normal 'global (kbd "<leader> p k") 'project-kill-buffers)
-  (evil-define-key 'normal 'global (kbd "<leader> p D") 'project-dired)
+  ;;;; flymake
 
-  (evil-define-key 'normal 'global (kbd "P") 'consult-yank-from-kill-ring)
-  (evil-define-key 'normal 'global (kbd "<leader> P") 'consult-yank-from-kill-ring)
+  (evil-define-key 'normal 'global (kbd "<leader> f n") 'flymake-goto-next-error)
+  (evil-define-key 'normal 'global (kbd "<leader> f p") 'flymake-goto-prev-error)
 
-  (evil-define-key 'normal 'global (kbd "<leader> .") 'embark-act)
-
-  (evil-define-key 'normal 'global (kbd "<leader> u") 'undo-tree-visualize)
-
-  (evil-define-key 'normal 'global (kbd "<leader> h m") 'describe-mode)
-  (evil-define-key 'normal 'global (kbd "<leader> h f") 'describe-function)
-  (evil-define-key 'normal 'global (kbd "<leader> h v") 'describe-variable)
-  (evil-define-key 'normal 'global (kbd "<leader> h k") 'describe-key)
-
-  (evil-define-key 'normal 'global (kbd "] t") 'tab-next)
-  (evil-define-key 'normal 'global (kbd "[ t") 'tab-previous)
-
-(evil-define-key 'normal 'global (kbd "gcc")
+  (evil-define-key 'normal 'global (kbd "gcc")
     (lambda ()
       (interactive)
       (if (not (use-region-p))
-        (comment-or-uncomment-region (line-beginning-position) (line-end-position)))))
+          (comment-or-uncomment-region (line-beginning-position) (line-end-position)))))
 
   (evil-define-key 'visual 'global (kbd "gc")
     (lambda ()
       (interactive)
       (if (use-region-p)
-        (comment-or-uncomment-region (region-beginning) (region-end)))))
-
+          (comment-or-uncomment-region (region-beginning) (region-end)))))
   
-   (evil-mode 1))
+)
 
 ;; bindings
 (global-set-key (kbd "C-<escape>") #'evil-mode)
-
 
 (use-package evil-collection
   :straight t

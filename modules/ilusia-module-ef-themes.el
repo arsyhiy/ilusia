@@ -1,8 +1,7 @@
 (use-package ef-themes
-  :straight t 
-    )
+  :straight t)
 
-;; (require 'ef-themes)
+(load-theme 'ef-orange t)
 
 
 (provide 'ilusia-module-ef-themes)
