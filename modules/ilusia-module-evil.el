@@ -27,71 +27,107 @@
   (evil-define-key 'normal 'global (kbd "<leader> d f") 'find-file)
 
 
-  ;;;; version controll
-  (evil-define-key 'normal 'global (kbd "<leader> g s") 'magit-status)
-  (evil-define-key 'normal 'global (kbd "<leader> g d") 'magit-diff-buffer-file)
-  (evil-define-key 'normal 'global (kbd "<leader> g l") 'magit-log-current)
-  (evil-define-key 'normal 'global (kbd "<leader> g c") 'magit-commit)
-  (evil-define-key 'normal 'global (kbd "<leader> g p") 'magit-push-current-to-pushremote)
-  (evil-define-key 'normal 'global (kbd "<leader> g b") 'vc-annotate) ;; literally git blame 
-
-
   ;;;; buffer
-  
+
   (evil-define-key 'normal 'global (kbd "<leader> b n") 'switch-to-next-buffer)
   (evil-define-key 'normal 'global (kbd "<leader> b p") 'switch-to-prev-buffer)
   (evil-define-key 'normal 'global (kbd "<leader> b k") 'kill-current-buffer)
 
-  ;;;; consult
+
+  ;;;; search
 
   (evil-define-key 'normal 'global (kbd "<leader>SPC") 'consult-buffer)
   (evil-define-key 'normal 'global (kbd "<leader> c f") 'consult-find)
   (evil-define-key 'normal 'global (kbd "<leader> c g") 'consult-grep)
   (evil-define-key 'normal 'global (kbd "<leader> c G") 'consult-git-grep)
   (evil-define-key 'normal 'global (kbd "<leader> c r") 'consult-ripgrep)
-  (evil-define-key 'normal 'global (kbd "<leader> c i") 'consult-info)
   (evil-define-key 'normal 'global (kbd "<leader> c l") 'consult-line)
+  (evil-define-key 'normal 'global (kbd "<leader> c i") 'consult-info)
   (evil-define-key 'normal 'global (kbd "<leader> c m") 'consult-flymake)
   (evil-define-key 'normal 'global (kbd "<leader> c p") 'consult-project-buffer)
 
-  ;;;; flymake
-
-  (evil-define-key 'normal 'global (kbd "<leader> f n") 'flymake-goto-next-error)
-  (evil-define-key 'normal 'global (kbd "<leader> f p") 'flymake-goto-prev-error)
 
   ;;;; project
+
   (evil-define-key 'normal 'global (kbd "<leader> p p") 'project-switch-project)
   (evil-define-key 'normal 'global (kbd "<leader> p f") 'project-find-file)
   (evil-define-key 'normal 'global (kbd "<leader> p g") 'project-find-regexp)
+  (evil-define-key 'normal 'global (kbd "<leader> p d") 'project-dired)
 
-  ;;;; lsp
+
+  ;;;; version control
+
+  (evil-define-key 'normal 'global (kbd "<leader> g s") 'magit-status)
+  (evil-define-key 'normal 'global (kbd "<leader> g d") 'magit-diff-buffer-file)
+  (evil-define-key 'normal 'global (kbd "<leader> g l") 'magit-log-current)
+  (evil-define-key 'normal 'global (kbd "<leader> g b") 'vc-annotate)
+  (evil-define-key 'normal 'global (kbd "<leader> g c") 'magit-commit)
+  (evil-define-key 'normal 'global (kbd "<leader> g p") 'magit-push-current-to-pushremote)
+
+
+  ;;;; language / lsp
+
   (evil-define-key 'normal 'global (kbd "<leader> l d") 'xref-find-definitions)
   (evil-define-key 'normal 'global (kbd "<leader> l r") 'xref-find-references)
+  (evil-define-key 'normal 'global (kbd "<leader> l i") 'xref-find-apropos)
+  (evil-define-key 'normal 'global (kbd "<leader> l h") 'lsp-describe-thing-at-point)
   (evil-define-key 'normal 'global (kbd "<leader> l a") 'lsp-execute-code-action)
   (evil-define-key 'normal 'global (kbd "<leader> l R") 'lsp-rename)
 
 
-  ;;; execute
+  ;;;; diagnostics
+
+  (evil-define-key 'normal 'global (kbd "<leader> f n") 'flymake-goto-next-error)
+  (evil-define-key 'normal 'global (kbd "<leader> f p") 'flymake-goto-prev-error)
+  (evil-define-key 'normal 'global (kbd "<leader> f d") 'flymake-show-and-sensitize-buffer)
+
+
+  ;;;; execute
+
   (evil-define-key 'normal 'global (kbd "<leader> x f") 'format-all-buffer)
   (evil-define-key 'normal 'global (kbd "<leader> x t") 'projectile-test-project)
   (evil-define-key 'normal 'global (kbd "<leader> x r") 'compile)
 
-  (evil-define-key 'normal 'global (kbd "<leader> l d") 'xref-find-definitions)
-  (evil-define-key 'normal 'global (kbd "<leader> l r") 'xref-find-references)
+
+  ;;;; window
+
+  (evil-define-key 'normal 'global (kbd "<leader> w h") 'windmove-left)
+  (evil-define-key 'normal 'global (kbd "<leader> w j") 'windmove-down)
+  (evil-define-key 'normal 'global (kbd "<leader> w k") 'windmove-up)
+  (evil-define-key 'normal 'global (kbd "<leader> w l") 'windmove-right)
+
+  (evil-define-key 'normal 'global (kbd "<leader> w s") 'split-window-below)
+  (evil-define-key 'normal 'global (kbd "<leader> w v") 'split-window-right)
+  (evil-define-key 'normal 'global (kbd "<leader> w d") 'delete-window)
+
+  (evil-define-key 'normal 'global (kbd "<leader> w <") 'shrink-window-horizontally)
+  (evil-define-key 'normal 'global (kbd "<leader> w >") 'enlarge-window-horizontally)
+  (evil-define-key 'normal 'global (kbd "<leader> w -") 'shrink-window)
+  (evil-define-key 'normal 'global (kbd "<leader> w +") 'enlarge-window)
+  (evil-define-key 'normal 'global (kbd "<leader> w =") 'balance-windows)
+  (evil-define-key 'normal 'global (kbd "<leader> w u") 'winner-undo)
+
+  (evil-define-key 'normal 'global (kbd ".") #'repeat)
+
+
+  ;;;; editing
 
   (evil-define-key 'normal 'global (kbd "gcc")
     (lambda ()
       (interactive)
       (if (not (use-region-p))
-          (comment-or-uncomment-region (line-beginning-position) (line-end-position)))))
+          (comment-or-uncomment-region
+           (line-beginning-position)
+           (line-end-position)))))
 
   (evil-define-key 'visual 'global (kbd "gc")
     (lambda ()
       (interactive)
       (if (use-region-p)
-          (comment-or-uncomment-region (region-beginning) (region-end)))))
-  
-)
+          (comment-or-uncomment-region
+           (region-beginning)
+           (region-end)))))
+  )
 
 ;; bindings
 (global-set-key (kbd "C-<escape>") #'evil-mode)

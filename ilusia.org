@@ -269,23 +269,13 @@ from repository: Help keeping ~/.config/emacs clean
 **** Window
 
 #+begin_src emacs-lisp
-;; TODO: понять что я реально считаю нужным добавить союда 
-;; ;; fringes
-;; (set-fringe-mode nil)
-
-;; ;; balance
-;; (global-set-key (kbd "C-x -") #'balance-windows)
-
-;; ;; split threshold
-;; (setq split-width-threshold 70)
-
+;; there can be your code
 #+end_src
 **** buffer
 #+begin_src emacs-lisp
 
 ;; icons
 (ilusia-module 'all-the-icons)
-
 
 ;; decorations
 (ilusia-module 'hl-todo)
@@ -358,6 +348,7 @@ adding mode and some convenient functions
 :END:
 
 #+begin_src emacs-lisp
+
 (ilusia-module 'magit)
 (ilusia-module 'smerge)
 (ilusia-module 'diff-hl)
@@ -384,13 +375,17 @@ adding mode and some convenient functions
 #+end_src
 **** diagnostic information
 #+begin_src  emacs-lisp
+
 (ilusia-module 'eldoc)
 (ilusia-module 'flymake)
+
 #+end_src
 
 **** templates
 #+begin_src  emacs-lisp
+
 (ilusia-module 'yasnippet)
+
 #+end_src
 
 *** languages
@@ -498,71 +493,107 @@ plugin repository: https://github.com/emacs-evil/evil
   (evil-define-key 'normal 'global (kbd "<leader> d f") 'find-file)
 
 
-  ;;;; version controll
-  (evil-define-key 'normal 'global (kbd "<leader> g s") 'magit-status)
-  (evil-define-key 'normal 'global (kbd "<leader> g d") 'magit-diff-buffer-file)
-  (evil-define-key 'normal 'global (kbd "<leader> g l") 'magit-log-current)
-  (evil-define-key 'normal 'global (kbd "<leader> g c") 'magit-commit)
-  (evil-define-key 'normal 'global (kbd "<leader> g p") 'magit-push-current-to-pushremote)
-  (evil-define-key 'normal 'global (kbd "<leader> g b") 'vc-annotate) ;; literally git blame 
-
-
   ;;;; buffer
-  
+
   (evil-define-key 'normal 'global (kbd "<leader> b n") 'switch-to-next-buffer)
   (evil-define-key 'normal 'global (kbd "<leader> b p") 'switch-to-prev-buffer)
   (evil-define-key 'normal 'global (kbd "<leader> b k") 'kill-current-buffer)
 
-  ;;;; consult
+
+  ;;;; search
 
   (evil-define-key 'normal 'global (kbd "<leader>SPC") 'consult-buffer)
   (evil-define-key 'normal 'global (kbd "<leader> c f") 'consult-find)
   (evil-define-key 'normal 'global (kbd "<leader> c g") 'consult-grep)
   (evil-define-key 'normal 'global (kbd "<leader> c G") 'consult-git-grep)
   (evil-define-key 'normal 'global (kbd "<leader> c r") 'consult-ripgrep)
-  (evil-define-key 'normal 'global (kbd "<leader> c i") 'consult-info)
   (evil-define-key 'normal 'global (kbd "<leader> c l") 'consult-line)
+  (evil-define-key 'normal 'global (kbd "<leader> c i") 'consult-info)
   (evil-define-key 'normal 'global (kbd "<leader> c m") 'consult-flymake)
   (evil-define-key 'normal 'global (kbd "<leader> c p") 'consult-project-buffer)
 
-  ;;;; flymake
-
-  (evil-define-key 'normal 'global (kbd "<leader> f n") 'flymake-goto-next-error)
-  (evil-define-key 'normal 'global (kbd "<leader> f p") 'flymake-goto-prev-error)
 
   ;;;; project
+
   (evil-define-key 'normal 'global (kbd "<leader> p p") 'project-switch-project)
   (evil-define-key 'normal 'global (kbd "<leader> p f") 'project-find-file)
   (evil-define-key 'normal 'global (kbd "<leader> p g") 'project-find-regexp)
+  (evil-define-key 'normal 'global (kbd "<leader> p d") 'project-dired)
 
-  ;;;; lsp
+
+  ;;;; version control
+
+  (evil-define-key 'normal 'global (kbd "<leader> g s") 'magit-status)
+  (evil-define-key 'normal 'global (kbd "<leader> g d") 'magit-diff-buffer-file)
+  (evil-define-key 'normal 'global (kbd "<leader> g l") 'magit-log-current)
+  (evil-define-key 'normal 'global (kbd "<leader> g b") 'vc-annotate)
+  (evil-define-key 'normal 'global (kbd "<leader> g c") 'magit-commit)
+  (evil-define-key 'normal 'global (kbd "<leader> g p") 'magit-push-current-to-pushremote)
+
+
+  ;;;; language / lsp
+
   (evil-define-key 'normal 'global (kbd "<leader> l d") 'xref-find-definitions)
   (evil-define-key 'normal 'global (kbd "<leader> l r") 'xref-find-references)
+  (evil-define-key 'normal 'global (kbd "<leader> l i") 'xref-find-apropos)
+  (evil-define-key 'normal 'global (kbd "<leader> l h") 'lsp-describe-thing-at-point)
   (evil-define-key 'normal 'global (kbd "<leader> l a") 'lsp-execute-code-action)
   (evil-define-key 'normal 'global (kbd "<leader> l R") 'lsp-rename)
 
 
-  ;;; execute
+  ;;;; diagnostics
+
+  (evil-define-key 'normal 'global (kbd "<leader> f n") 'flymake-goto-next-error)
+  (evil-define-key 'normal 'global (kbd "<leader> f p") 'flymake-goto-prev-error)
+  (evil-define-key 'normal 'global (kbd "<leader> f d") 'flymake-show-and-sensitize-buffer)
+
+
+  ;;;; execute
+
   (evil-define-key 'normal 'global (kbd "<leader> x f") 'format-all-buffer)
   (evil-define-key 'normal 'global (kbd "<leader> x t") 'projectile-test-project)
   (evil-define-key 'normal 'global (kbd "<leader> x r") 'compile)
 
-  (evil-define-key 'normal 'global (kbd "<leader> l d") 'xref-find-definitions)
-  (evil-define-key 'normal 'global (kbd "<leader> l r") 'xref-find-references)
+
+  ;;;; window
+
+  (evil-define-key 'normal 'global (kbd "<leader> w h") 'windmove-left)
+  (evil-define-key 'normal 'global (kbd "<leader> w j") 'windmove-down)
+  (evil-define-key 'normal 'global (kbd "<leader> w k") 'windmove-up)
+  (evil-define-key 'normal 'global (kbd "<leader> w l") 'windmove-right)
+
+  (evil-define-key 'normal 'global (kbd "<leader> w s") 'split-window-below)
+  (evil-define-key 'normal 'global (kbd "<leader> w v") 'split-window-right)
+  (evil-define-key 'normal 'global (kbd "<leader> w d") 'delete-window)
+
+  (evil-define-key 'normal 'global (kbd "<leader> w <") 'shrink-window-horizontally)
+  (evil-define-key 'normal 'global (kbd "<leader> w >") 'enlarge-window-horizontally)
+  (evil-define-key 'normal 'global (kbd "<leader> w -") 'shrink-window)
+  (evil-define-key 'normal 'global (kbd "<leader> w +") 'enlarge-window)
+  (evil-define-key 'normal 'global (kbd "<leader> w =") 'balance-windows)
+  (evil-define-key 'normal 'global (kbd "<leader> w u") 'winner-undo)
+
+  (evil-define-key 'normal 'global (kbd ".") #'repeat)
+
+
+  ;;;; editing
 
   (evil-define-key 'normal 'global (kbd "gcc")
     (lambda ()
       (interactive)
       (if (not (use-region-p))
-          (comment-or-uncomment-region (line-beginning-position) (line-end-position)))))
+          (comment-or-uncomment-region
+           (line-beginning-position)
+           (line-end-position)))))
 
   (evil-define-key 'visual 'global (kbd "gc")
     (lambda ()
       (interactive)
       (if (use-region-p)
-          (comment-or-uncomment-region (region-beginning) (region-end)))))
-  
-)
+          (comment-or-uncomment-region
+           (region-beginning)
+           (region-end)))))
+  )
 
 ;; bindings
 (global-set-key (kbd "C-<escape>") #'evil-mode)
@@ -596,11 +627,13 @@ plugin repository https://github.com/emacs-evil/evil-surround
 **** evil-machit
 plugin repository: https://github.com/redguardtoo/evil-matchit
 #+begin_src emacs-lisp
+
 (use-package evil-matchit
   :straight t
   :after evil-collection
   :config
   (global-evil-matchit-mode 1))
+
 #+end_src
 
 
@@ -728,6 +761,7 @@ plugin repository: https://github.com/dgutov/diff-hl
                                    (change . "┃")
                                    (unknown . "┆")
                                    (ignored . "i"))))
+
 #+end_src
 
 *** hl-todo
@@ -743,6 +777,7 @@ plugin repository: github.com/tarsius/hl-todo
  
   :config
   (global-hl-todo-mode 1))
+
 #+end_src
 *** highlight-indent-guides
 :PROPERTIES:
@@ -750,12 +785,14 @@ plugin repository: github.com/tarsius/hl-todo
 :END:
 plugin repository: https://github.com/bumblepup/highlight-indent-guides
 #+begin_src emacs-lisp
+
 (use-package highlight-indent-guides
 
   :straight t
   :hook (prog-mode . highlight-indent-guides-mode)
   :custom
   (highlight-indent-guides-method 'character))
+
 #+end_src
 
 *** rainbow-delimiters
@@ -764,6 +801,7 @@ plugin repository: https://github.com/bumblepup/highlight-indent-guides
 :END:
 plugin repository: https://github.com/Fanael/rainbow-delimiters 
 #+begin_src emacs-lisp
+
 (use-package rainbow-delimiters
   :straight t
 
@@ -772,6 +810,7 @@ plugin repository: https://github.com/Fanael/rainbow-delimiters
 
   :custom
   (rainbow-delimiters-max-face-count 9))
+
 #+end_src
 
 *** treesit-auto
@@ -780,6 +819,7 @@ plugin repository: https://github.com/Fanael/rainbow-delimiters
 :END:
 plugin repository: https://github.com/renzmann/treesit-auto
 #+begin_src emacs-lisp
+
 (use-package treesit-auto
   :straight t
   :custom
@@ -796,6 +836,7 @@ plugin repository: https://github.com/renzmann/treesit-auto
      (css "https://github.com/tree-sitter/tree-sitter-css" "v0.23.2")
      (html "https://github.com/tree-sitter/tree-sitter-html" "v0.23.2")
      (javascript "https://github.com/tree-sitter/tree-sitter-javascript" "v0.20.2")))
+
 #+end_src
 
 *** all-the-icons
@@ -805,6 +846,7 @@ plugin repository: https://github.com/renzmann/treesit-auto
 
 plugin repository: https://github.com/domtronn/all-the-icons.el
 #+begin_src emacs-lisp
+
 (use-package all-the-icons
   :straight t)
 
@@ -861,6 +903,7 @@ this plugin is built in
   :straight t
   :config
   (format-all-mode 1))
+
 #+end_src 
 *** ide
 **** corfu
@@ -910,7 +953,6 @@ this plugin is built in
 (use-package eldoc-box
   :straight t
   :hook (eldoc-mode . eldoc-box-hover-mode))
-
 
 #+end_src
 
@@ -1009,7 +1051,6 @@ plugin repository: https://github.com/emacs-lsp/lsp-mode
   :after lsp-mode
   :custom
   (lsp-pyright-langserver-command "basedpyright"))
-
 
 #+end_src
 
@@ -1335,6 +1376,7 @@ more comfortable for me and people who litle more than just basic
 (use-package emacs-lisp-mode
   :straight nil
   :mode ("\\.el\\'" . emacs-lisp-mode))
+
 #+end_src
 
 **** html-mode

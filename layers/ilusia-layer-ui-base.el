@@ -16,19 +16,10 @@
 ;; visible bell
 (setq visible-bell t)
 
-;; TODO: понять что я реально считаю нужным добавить союда 
-;; ;; fringes
-;; (set-fringe-mode nil)
-
-;; ;; balance
-;; (global-set-key (kbd "C-x -") #'balance-windows)
-
-;; ;; split threshold
-;; (setq split-width-threshold 70)
+;; there can be your code
 
 ;; icons
 (ilusia-module 'all-the-icons)
-
 
 ;; decorations
 (ilusia-module 'hl-todo)
